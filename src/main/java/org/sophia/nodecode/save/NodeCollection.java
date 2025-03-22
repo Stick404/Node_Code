@@ -15,7 +15,7 @@ public class NodeCollection extends SavedData {
     public static Factory<NodeCollection> factory = new SavedData.Factory<>(NodeCollection::create,NodeCollection::load);
     HashSet<BlockPos> extensions = new HashSet<>();
     //Store all known blocks
-    HashMap<UUID,HashSet<BlockPos>> nodeLocations = new HashMap<>();
+    HashMap<UUID,NodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
     //this is not great, but it works for now. Later it might be better to replace `HashSet<BlockPos>` with its own Class.
     //So like, it stores the `HashSet` inside the class, and other bits of important data (such as: Fork Directions,
@@ -27,16 +27,15 @@ public class NodeCollection extends SavedData {
     }
 
     public void createNodeLocation(UUID uuid, BlockPos pos){
+        NodeStorage storage = new NodeStorage(uuid,pos);
+        nodeLocations.put(uuid,storage);
         extensions.add(pos);
-        HashSet<BlockPos> setNew = new HashSet<>();
-        setNew.add(pos);
-        nodeLocations.put(uuid,setNew);
         LOGGER.info("making new Location!");
         this.setDirty();
     }
 
     public void removeNodeLocation(UUID uuid){
-        HashSet<BlockPos> oldBlocks = nodeLocations.get(uuid);
+        HashSet<BlockPos> oldBlocks = nodeLocations.get(uuid).getKnownBlocks();
         for(var block : oldBlocks){
             extensions.remove(block);
         }
@@ -45,11 +44,10 @@ public class NodeCollection extends SavedData {
     }
 
     public void removeExtension(BlockPos pos){
-        //TODO: make this remove all other extensions down the line
-
         for (var hashSet : nodeLocations.entrySet()) {
-            if (hashSet.getValue().contains(pos)) {
-                hashSet.getValue().remove(pos);
+            var storage = hashSet.getValue();
+            if (storage.get(pos)) {
+                storage.removeKnownBlock(pos);
                 extensions.remove(pos);
                 System.out.println("Remove Block");
                 this.setDirty();
@@ -73,9 +71,10 @@ public class NodeCollection extends SavedData {
         //TODO: Check if block is valid on multiple sides. If so, do something
         BlockPos x = tryExtension(pos);
         if (x != null){
-            for (var hashSet : nodeLocations.entrySet()) {
-                if (hashSet.getValue().contains(x)) {
-                    hashSet.getValue().add(pos);
+            for (var str : nodeLocations.entrySet()) {
+                NodeStorage storage = str.getValue();
+                if (storage.canAdd(pos)) {
+                    storage.addKnownBlock(pos);
                     extensions.add(pos);
                     System.out.println("Added Block!");
                     this.setDirty();
@@ -87,47 +86,13 @@ public class NodeCollection extends SavedData {
     }
 
 
-    public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+    public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) { //TODO: Fix this!
         NodeCollection data = NodeCollection.create();
-
-        //loading Locations
-        var locationsTag = (ListTag) tag.get("nodeLocations");
-        assert locationsTag != null;
-        for(var locationTEMP : locationsTag){
-            CompoundTag locationTag = (CompoundTag) locationTEMP;
-            UUID uuid = locationTag.getUUID("uuid");
-
-
-            HashSet<BlockPos> blocks = new HashSet<>();
-            ListTag poses = locationTag.getList("blocklist", Tag.TAG_INT_ARRAY);
-            for(var block : poses){
-                var blockPos = ((IntArrayTag) block).getAsIntArray();
-                BlockPos tempBlock = new BlockPos(blockPos[0],blockPos[1],blockPos[2]);
-                data.extensions.add(tempBlock); //so there is never random blocks in extensions
-                blocks.add(tempBlock);
-            }
-            data.nodeLocations.put(uuid,blocks);
-        }
         return data;
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        ListTag nodeLocationTag = new ListTag();
-        for(var sets : nodeLocations.entrySet()){
-            CompoundTag nodeLocTag = new CompoundTag();
-
-            nodeLocTag.put("uuid",NbtUtils.createUUID(sets.getKey()));
-
-            ListTag blockList = new ListTag();
-            for(var bad : sets.getValue()){
-                blockList.add(NbtUtils.writeBlockPos(bad)); //Add all the blocks in the sub-set into the `blockList`
-            }
-            nodeLocTag.put("blocklist",blockList); //add BlockPoss into the main tag
-            nodeLocationTag.add(nodeLocTag);
-        }
-
-        compoundTag.put("nodeLocations",nodeLocationTag);
+    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) { //TODO: Fix this!
         return compoundTag;
     }
 }

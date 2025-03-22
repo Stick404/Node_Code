@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class NodeStorage {
     private HashSet<BlockPos> knownBlocks;
-    private Direction dir; //rather than doing 2 directions, we just assume the 2nd direction is rotated by 90
+    private Direction dir = Direction.NORTH; //rather than doing 2 directions, we just assume the 2nd direction is rotated by 90 ClockWise
     private final UUID uuid;
     private final BlockPos centerBlock;
     //Eval eval;
@@ -18,7 +18,9 @@ public class NodeStorage {
     public NodeStorage(UUID uuid, BlockPos centerBlock){
         this.uuid = uuid;
         this.centerBlock = centerBlock;
-        this.addKnownBlock(centerBlock);
+        HashSet<BlockPos> tempSet = new HashSet<>();
+        tempSet.add(centerBlock);
+        this.knownBlocks = tempSet;
     }
     public NodeStorage(CompoundTag tag, UUID uuid){
         ListTag poses = tag.getList("hashBlocks", Tag.TAG_INT_ARRAY);
@@ -47,7 +49,11 @@ public class NodeStorage {
     public Boolean canAdd(BlockPos pos){
         //check if "can add" is in the same direction of `dir` or rotated 90
         for(BlockPos maybe : knownBlocks){
-            if (maybe.relative(dir) == pos || maybe.relative(dir.getClockWise()) == pos){
+            BlockPos offset = maybe.offset(dir.getUnitVec3i());
+            BlockPos offsetTurn = maybe.offset(dir.getClockWise().getUnitVec3i());
+
+            if ((offset.getX() == pos.getX() && offset.getY() == pos.getY() && offset.getZ() == pos.getZ())
+                    || (offsetTurn.getX() == pos.getX() && offsetTurn.getY() == pos.getY() && offsetTurn.getZ() == pos.getZ())){
                 return true;
             }
         }
@@ -69,20 +75,21 @@ public class NodeStorage {
             Direction localDir;
             if (pos.subtract(centerBlock).get(dir.getAxis()) != 0) {
                 localDir = dir;
-                System.out.println("Doing Normal");
             } else if (pos.subtract(centerBlock).get(dir.getClockWise().getAxis()) != 0) {
                 localDir = dir.getClockWise();
-                System.out.println("Doing Counter Normal");
             } else {
                 throw new RuntimeException("Illegal block position in Node Array");
             }
 
-            for(BlockPos remove : this.knownBlocks){
+            for(BlockPos remove : this.knownBlocks.stream().toList()){
                 if (remove.get(localDir.getAxis())*localDir.getAxisDirection().getStep() > pos.get(localDir.getAxis())*localDir.getAxisDirection().getStep()){
                     knownBlocks.remove(remove);
                 }
             }
         }
+    }
+    public boolean get(BlockPos pos){
+        return this.knownBlocks.contains(pos);
     }
 
 
