@@ -17,10 +17,9 @@ public class NodeCollection extends SavedData {
     //Store all known blocks
     HashMap<UUID,NodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
-    //this is not great, but it works for now. Later it might be better to replace `HashSet<BlockPos>` with its own Class.
-    //So like, it stores the `HashSet` inside the class, and other bits of important data (such as: Fork Directions,
-    //eval store, power, etc)
-
+    //TODO: Re-add in Saving and Loading
+    //TODO: Add in Y values
+    //TODO: Make this work in all dirs, not just north
 
     public static NodeCollection create() {
         return new NodeCollection();
@@ -49,10 +48,16 @@ public class NodeCollection extends SavedData {
             if (storage.get(pos)) {
                 storage.removeKnownBlock(pos);
                 extensions.remove(pos);
-                System.out.println("Remove Block");
                 this.setDirty();
             }
         }
+    }
+
+    public HashSet<BlockPos> getExtensions() {
+        return extensions;
+    }
+    public boolean contains(BlockPos pos){
+        return extensions.contains(pos);
     }
 
     //returns the BlockPos that it connects too, else returns null
@@ -93,6 +98,14 @@ public class NodeCollection extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) { //TODO: Fix this!
+        ListTag tag = new ListTag();
+        for(var storageTEMP : this.nodeLocations.entrySet()){
+            CompoundTag storageTag = new CompoundTag();
+            NodeStorage storage = storageTEMP.getValue();
+
+            storageTag.putUUID("uuid",storage.getUuid());
+            storageTag.put("storage",storage.save());
+        }
         return compoundTag;
     }
 }

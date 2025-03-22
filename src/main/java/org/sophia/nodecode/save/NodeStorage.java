@@ -45,6 +45,9 @@ public class NodeStorage {
         tag.put("centerBlock",NbtUtils.writeBlockPos(centerBlock));
         return tag;
     }
+    public CompoundTag save(){
+        return save(new CompoundTag());
+    }
 
     public Boolean canAdd(BlockPos pos){
         //check if "can add" is in the same direction of `dir` or rotated 90
@@ -80,10 +83,12 @@ public class NodeStorage {
             } else {
                 throw new RuntimeException("Illegal block position in Node Array");
             }
+            knownBlocks.remove(pos);
 
             for(BlockPos remove : this.knownBlocks.stream().toList()){
-                if (remove.get(localDir.getAxis())*localDir.getAxisDirection().getStep() > pos.get(localDir.getAxis())*localDir.getAxisDirection().getStep()){
+                if (remove.get(localDir.getAxis())*localDir.getAxisDirection().getStep() >= pos.get(localDir.getAxis())*localDir.getAxisDirection().getStep()){
                     knownBlocks.remove(remove);
+                    System.out.println("Broke Block!");
                 }
             }
         }

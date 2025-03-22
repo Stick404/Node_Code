@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "nodecode:block/node_extender"
+    }
+  }
+}
