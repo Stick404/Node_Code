@@ -3,6 +3,7 @@ package org.sophia.nodecode.save;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -22,17 +23,31 @@ public class NodeStorage {
         tempSet.add(centerBlock);
         this.knownBlocks = tempSet;
     }
-    public NodeStorage(CompoundTag tag, UUID uuid){
+
+    //made for NodeStorage#fromTag
+    //returns a fully made NodeStorage
+    private NodeStorage(UUID uuid, BlockPos centerBlock, Direction dir, HashSet<BlockPos> knownBlocks){
+        this.uuid = uuid;
+        this.centerBlock = centerBlock;
+        knownBlocks.add(centerBlock);
+        this.knownBlocks = knownBlocks;
+        this.dir = dir;
+    }
+
+    public static NodeStorage fromTag(CompoundTag tag, UUID uuid){
+        HashSet<BlockPos> knownBlocks = new HashSet<>();
+
         ListTag poses = tag.getList("hashBlocks", Tag.TAG_INT_ARRAY);
         for(var block : poses) {
             var blockPos = ((IntArrayTag) block).getAsIntArray();
             BlockPos tempBlock = new BlockPos(blockPos[0], blockPos[1], blockPos[2]);
-            this.knownBlocks.add(tempBlock);
+            knownBlocks.add(tempBlock);
         }
-        this.dir = Direction.values()[tag.getInt("dir")];
-        this.uuid = uuid;
+        var dir = Direction.values()[tag.getInt("dir")];
         var blockPos = ((IntArrayTag) tag.get("centerBlock")).getAsIntArray();
-        this.centerBlock = new BlockPos(blockPos[0], blockPos[1], blockPos[2]);
+        var centerBlock = new BlockPos(blockPos[0], blockPos[1], blockPos[2]);
+
+        return new NodeStorage(uuid,centerBlock,dir,knownBlocks);
     }
 
     public CompoundTag save(CompoundTag tag){
@@ -49,31 +64,20 @@ public class NodeStorage {
         return save(new CompoundTag());
     }
 
-    public Boolean canAdd(BlockPos pos){
-        //check if "can add" is in the same direction of `dir` or rotated 90
-        for(BlockPos maybe : knownBlocks){
-            BlockPos offset = maybe.offset(dir.getUnitVec3i());
-            BlockPos offsetTurn = maybe.offset(dir.getClockWise().getUnitVec3i());
-
-            if ((offset.getX() == pos.getX() && offset.getY() == pos.getY() && offset.getZ() == pos.getZ())
-                    || (offsetTurn.getX() == pos.getX() && offsetTurn.getY() == pos.getY() && offsetTurn.getZ() == pos.getZ())){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public HashSet<BlockPos> getKnownBlocks() {
         return knownBlocks;
     }
 
-    public void addKnownBlock(BlockPos pos){
-        if (canAdd(pos)){
+    public boolean addKnownBlock(BlockPos pos){
+        boolean canAdd = validBlock(pos) != null;
+        if (canAdd){
             this.knownBlocks.add(pos);
         }
+        return canAdd;
+
     }
 
-    public void removeKnownBlock(BlockPos pos){
+    public void removeKnownBlock(BlockPos pos){ //TODO: Make this use NodeStorage#validBlock
         if(this.knownBlocks.contains(pos) && pos.getY() == centerBlock.getY()){
             Direction localDir;
             if (pos.subtract(centerBlock).get(dir.getAxis()) != 0) {
@@ -93,16 +97,42 @@ public class NodeStorage {
             }
         }
     }
+
+    public @Nullable BlockPos validBlock(BlockPos pos){
+        //checks if the given block can be added
+        if (pos.getX() == centerBlock.getX() || pos.getY() == centerBlock.getY() || pos.getZ() == centerBlock.getZ()){
+
+            Direction localDir;
+            if (pos.subtract(centerBlock).get(dir.getAxis()) != 0 && pos.getY() == centerBlock.getY()) {
+                localDir = dir;
+            } else if (pos.subtract(centerBlock).get(dir.getClockWise().getAxis()) != 0 && pos.getY() == centerBlock.getY()) {
+                localDir = dir.getClockWise();
+            } else if (pos.getX() == centerBlock.getX() && pos.getZ() == centerBlock.getZ()){
+                localDir = Direction.UP;
+            } else {
+                return null;
+            }
+            BlockPos maybeBlock = pos.offset(localDir.getUnitVec3i().multiply(-1));
+            if (this.knownBlocks.contains(maybeBlock)){
+                return maybeBlock;
+            }
+        }
+        return null;
+    }
+
     public boolean get(BlockPos pos){
         return this.knownBlocks.contains(pos);
     }
-
 
     public Direction getDir() {
         return dir;
     }
     public Boolean trySetDir(Direction dir){
-        if (this.dir != null){
+        //if the dir is Null,
+        if (this.dir == null){
+            this.dir = dir;
+            return true;
+        } else if (this.dir.getCounterClockWise() == dir) {
             this.dir = dir;
         }
         return false;

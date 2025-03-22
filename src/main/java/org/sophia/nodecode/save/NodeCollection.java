@@ -12,12 +12,11 @@ import java.util.UUID;
 import static org.sophia.nodecode.Nodecode.LOGGER;
 
 public class NodeCollection extends SavedData {
-    public static Factory<NodeCollection> factory = new SavedData.Factory<>(NodeCollection::create,NodeCollection::load);
+    public static Factory<NodeCollection> factory = new Factory<>(NodeCollection::create,NodeCollection::load);
     HashSet<BlockPos> extensions = new HashSet<>();
     //Store all known blocks
     HashMap<UUID,NodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
-    //TODO: Re-add in Saving and Loading
     //TODO: Add in Y values
     //TODO: Make this work in all dirs, not just north
 
@@ -78,8 +77,7 @@ public class NodeCollection extends SavedData {
         if (x != null){
             for (var str : nodeLocations.entrySet()) {
                 NodeStorage storage = str.getValue();
-                if (storage.canAdd(pos)) {
-                    storage.addKnownBlock(pos);
+                if (storage.addKnownBlock(pos)) {
                     extensions.add(pos);
                     System.out.println("Added Block!");
                     this.setDirty();
@@ -91,21 +89,37 @@ public class NodeCollection extends SavedData {
     }
 
 
-    public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) { //TODO: Fix this!
+    public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         NodeCollection data = NodeCollection.create();
+
+        ListTag storageList = tag.getList("storages", Tag.TAG_COMPOUND);
+        HashSet<BlockPos> extensions = new HashSet<>();
+
+        for(var tagDataTEMP : storageList){
+            CompoundTag tagData = (CompoundTag) tagDataTEMP;
+            CompoundTag storageVal = tagData.getCompound("storage");
+            UUID uuid = tagData.getUUID("uuid");
+
+            var nodeStorage = NodeStorage.fromTag(storageVal,uuid);
+            data.nodeLocations.put(uuid,nodeStorage);
+            extensions.addAll(nodeStorage.getKnownBlocks());
+        }
+
+        data.extensions = extensions;
         return data;
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) { //TODO: Fix this!
+    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
         ListTag tag = new ListTag();
         for(var storageTEMP : this.nodeLocations.entrySet()){
             CompoundTag storageTag = new CompoundTag();
             NodeStorage storage = storageTEMP.getValue();
-
             storageTag.putUUID("uuid",storage.getUuid());
             storageTag.put("storage",storage.save());
+            tag.add(storageTag);
         }
+        compoundTag.put("storages",tag);
         return compoundTag;
     }
 }
