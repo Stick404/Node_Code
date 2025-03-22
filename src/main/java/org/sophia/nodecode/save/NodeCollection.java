@@ -1,9 +1,11 @@
 package org.sophia.nodecode.save;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -17,15 +19,15 @@ public class NodeCollection extends SavedData {
     //Store all known blocks
     HashMap<UUID,NodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
-    //TODO: Add in Y values
-    //TODO: Make this work in all dirs, not just north
+    //TODO: Make the blocks look different if they are in the global extensions (networking :weedhexxy:)
+    //TODO: make a BoundingBox (aabb) for the NodeStorage
 
     public static NodeCollection create() {
         return new NodeCollection();
     }
 
-    public void createNodeLocation(UUID uuid, BlockPos pos){
-        NodeStorage storage = new NodeStorage(uuid,pos);
+    public void createNodeLocation(UUID uuid, BlockPos pos, Direction dir){
+        NodeStorage storage = new NodeStorage(uuid,pos,dir);
         nodeLocations.put(uuid,storage);
         extensions.add(pos);
         LOGGER.info("making new Location!");
@@ -45,8 +47,11 @@ public class NodeCollection extends SavedData {
         for (var hashSet : nodeLocations.entrySet()) {
             var storage = hashSet.getValue();
             if (storage.get(pos)) {
-                storage.removeKnownBlock(pos);
+                var x = storage.removeKnownBlock(pos);
                 extensions.remove(pos);
+                for (var block : x){
+                    extensions.remove(x);
+                }
                 this.setDirty();
             }
         }
@@ -110,7 +115,7 @@ public class NodeCollection extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {
         ListTag tag = new ListTag();
         for(var storageTEMP : this.nodeLocations.entrySet()){
             CompoundTag storageTag = new CompoundTag();

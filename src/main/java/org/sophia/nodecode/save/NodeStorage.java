@@ -5,23 +5,26 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 public class NodeStorage {
     private HashSet<BlockPos> knownBlocks;
-    private Direction dir = Direction.NORTH; //rather than doing 2 directions, we just assume the 2nd direction is rotated by 90 ClockWise
+    private Direction dir = Direction.EAST; //rather than doing 2 directions, we just assume the 2nd direction is rotated by 90 ClockWise
     private final UUID uuid;
     private final BlockPos centerBlock;
     //Eval eval;
     //Add more vals if needed
 
-    public NodeStorage(UUID uuid, BlockPos centerBlock){
+    public NodeStorage(UUID uuid, BlockPos centerBlock,Direction dir){
         this.uuid = uuid;
         this.centerBlock = centerBlock;
         HashSet<BlockPos> tempSet = new HashSet<>();
         tempSet.add(centerBlock);
         this.knownBlocks = tempSet;
+        this.dir = dir;
     }
 
     //made for NodeStorage#fromTag
@@ -77,30 +80,40 @@ public class NodeStorage {
 
     }
 
-    public void removeKnownBlock(BlockPos pos){ //TODO: Make this use NodeStorage#validBlock
-        if(this.knownBlocks.contains(pos) && pos.getY() == centerBlock.getY()){
+    public List<BlockPos> removeKnownBlock(BlockPos pos){ //TODO: Make this use NodeStorage#validBlock
+        List<BlockPos> returnList = new ArrayList<>();
+
+        if(this.knownBlocks.contains(pos)){
+
             Direction localDir;
-            if (pos.subtract(centerBlock).get(dir.getAxis()) != 0) {
+            if (pos.subtract(centerBlock).get(dir.getAxis()) != 0 && pos.getY() == centerBlock.getY()) {
                 localDir = dir;
-            } else if (pos.subtract(centerBlock).get(dir.getClockWise().getAxis()) != 0) {
+            } else if (pos.subtract(centerBlock).get(dir.getClockWise().getAxis()) != 0 && pos.getY() == centerBlock.getY()) {
                 localDir = dir.getClockWise();
+            } else if (pos.getX() == centerBlock.getX() && pos.getZ() == centerBlock.getZ()){
+                localDir = Direction.UP;
             } else {
                 throw new RuntimeException("Illegal block position in Node Array");
             }
             knownBlocks.remove(pos);
-
+            System.out.println("Broke Block!");
             for(BlockPos remove : this.knownBlocks.stream().toList()){
                 if (remove.get(localDir.getAxis())*localDir.getAxisDirection().getStep() >= pos.get(localDir.getAxis())*localDir.getAxisDirection().getStep()){
                     knownBlocks.remove(remove);
                     System.out.println("Broke Block!");
+                    returnList.add(remove);
                 }
             }
         }
+        return returnList;
     }
 
     public @Nullable BlockPos validBlock(BlockPos pos){
         //checks if the given block can be added
         if (pos.getX() == centerBlock.getX() || pos.getY() == centerBlock.getY() || pos.getZ() == centerBlock.getZ()){
+            //Not great code, but:
+            //this is how we set a dir
+
 
             Direction localDir;
             if (pos.subtract(centerBlock).get(dir.getAxis()) != 0 && pos.getY() == centerBlock.getY()) {

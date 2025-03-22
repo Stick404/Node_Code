@@ -45,7 +45,7 @@ public class NodeRootBlock extends BaseEntityBlock {
         if (level.getBlockEntity(pos) instanceof NodeRootEntity entity){
             if (level instanceof ServerLevel serverLevel) {
                 var data = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
-                data.createNodeLocation(entity.getUuid(), pos);
+                data.createNodeLocation(entity.getUuid(), pos,state.getValue(FACING));
                 data.setDirty();
             }
             entity.setxCount(1);
