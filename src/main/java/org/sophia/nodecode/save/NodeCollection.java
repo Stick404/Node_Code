@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 import static org.sophia.nodecode.Nodecode.LOGGER;
 
@@ -47,10 +48,10 @@ public class NodeCollection extends SavedData {
         for (var hashSet : nodeLocations.entrySet()) {
             var storage = hashSet.getValue();
             if (storage.get(pos)) {
-                var x = storage.removeKnownBlock(pos);
+                List<BlockPos> x = storage.removeKnownBlock(pos);
                 extensions.remove(pos);
-                for (var block : x){
-                    extensions.remove(x);
+                for (BlockPos block : x){
+                    extensions.remove(block);
                 }
                 this.setDirty();
             }
