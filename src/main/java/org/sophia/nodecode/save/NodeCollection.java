@@ -93,6 +93,20 @@ public class NodeCollection extends SavedData {
         }
         return false;
     }
+    public boolean testAddExtension(BlockPos pos){
+        //TODO: Check if block is valid on multiple sides. If so, do something
+        BlockPos x = tryExtension(pos);
+        if (x != null){
+            for (var str : nodeLocations.entrySet()) {
+                NodeStorage storage = str.getValue();
+                if (storage.validBlock(pos) != null) {
+                    System.out.println("TRUEEEE!");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
     public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {

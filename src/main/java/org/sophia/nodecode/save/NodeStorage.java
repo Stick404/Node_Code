@@ -17,15 +17,12 @@ public class NodeStorage {
     private final UUID uuid;
     private final BlockPos centerBlock;
     private BlockPos dirDistance; //these 3 are used for rendering and quickly finding the bounding box. Is in World Space
-
-    private final BlockPos fuckYou;
     //Eval eval;
     //Add more vals if needed
 
     public NodeStorage(UUID uuid, BlockPos centerBlock,Direction dir){
         this.uuid = uuid;
         this.centerBlock = centerBlock;
-        this.fuckYou = centerBlock;
         HashSet<BlockPos> tempSet = new HashSet<>();
         tempSet.add(centerBlock);
         this.knownBlocks = tempSet;
@@ -42,8 +39,6 @@ public class NodeStorage {
         this.knownBlocks = knownBlocks;
         this.dir = dir;
         this.dirDistance = dirDistance;
-
-        this.fuckYou = centerBlock;
     }
 
     public static NodeStorage fromTag(CompoundTag tag, UUID uuid){
@@ -120,7 +115,8 @@ public class NodeStorage {
 
     public @Nullable BlockPos validBlock(BlockPos pos){
         //checks if the given block can be added
-        if (pos.getX() == centerBlock.getX() || pos.getY() == centerBlock.getY() || pos.getZ() == centerBlock.getZ()){
+        if ((pos.getX() == centerBlock.getX() && pos.getZ() != centerBlock.getZ()) || (pos.getX() != centerBlock.getX() && pos.getZ() == centerBlock.getZ())
+        || pos.getY() != centerBlock.getY()){
             Direction localDir = dirOrClockwise(pos);
             if (localDir == null){
                 return null;
