@@ -14,12 +14,14 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import org.sophia.nodecode.registries.BlockEntityRegistry;
 import org.sophia.nodecode.registries.BlockRegistry;
+import org.sophia.nodecode.rendering.NodeLevelRendering;
 
 import static org.sophia.nodecode.registries.BlockRegistry.NODE_ROOT_BLOCK_ITEM;
 
@@ -42,6 +44,8 @@ public class Nodecode {
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
+        NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> new NodeLevelRendering().render(x));
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
