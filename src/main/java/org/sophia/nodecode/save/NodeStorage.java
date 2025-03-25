@@ -175,7 +175,10 @@ public class NodeStorage {
         this.dirDistance = Utils.setAxisVal(this.dirDistance,localDir.getAxis(),pos.subtract(centerBlock).get(localDir.getAxis()));
         System.out.println(dirDistance);
     }
+    public void updateClients(boolean shouldClear){
+        PacketDistributor.sendToAllPlayers(new NodeStorageS2C(this.centerBlock,this.dirDistance,this.uuid,shouldClear));
+    }
     public void updateClients(){
-        PacketDistributor.sendToAllPlayers(new NodeStorageS2C(this.centerBlock,this.dirDistance,this.uuid));
+        updateClients(true);
     }
 }

@@ -17,8 +17,21 @@ import static org.sophia.nodecode.Utils.ID;
 public final class NodeLevelRendering {
     private static NodeLevelRendering INSTANCE;
     public HashMap<UUID,NodeStorageS2C> todos = new HashMap<>();
+    private boolean shouldClear = true;
 
     private NodeLevelRendering(){
+    }
+
+    public void clearTodo(){
+        if (!shouldClear) {
+            shouldClear = true;
+            return;
+        }
+        todos.clear();
+    }
+
+    public void setShouldClear(boolean shouldClear) {
+        this.shouldClear = shouldClear;
     }
 
     public static NodeLevelRendering getInstance(){

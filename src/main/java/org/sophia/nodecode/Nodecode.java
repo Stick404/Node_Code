@@ -3,9 +3,12 @@ package org.sophia.nodecode;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -17,6 +20,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
@@ -73,6 +77,16 @@ public class Nodecode {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
         event.getServer().getAllLevels().forEach((z) -> z.getDataStorage().computeIfAbsent(factory,"NodeCollection"));
+
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,EntityJoinLevelEvent.class,
+                (entityJoinEvent)-> {
+                    if (entityJoinEvent.getEntity().getType() == EntityType.PLAYER) {
+                        if (entityJoinEvent.getLevel() instanceof ServerLevel level) {
+                            System.out.println("UPDATEING PLAYERS");
+                            level.getDataStorage().get(factory, "NodeCollection").updatePlayers(false);
+                        }
+                    }
+                });
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -83,8 +97,8 @@ public class Nodecode {
             // Some client setup code
             NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> NodeLevelRendering.getInstance().render(x));
 
-            NeoForge.EVENT_BUS.addListener(LevelEvent.Load.class, (x) ->{
-                NodeLevelRendering.getInstance().todos.clear();
+            NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,LevelEvent.Load.class, (x) ->{
+                NodeLevelRendering.getInstance().clearTodo();
                 System.out.println("CLEARING!!!");
             });
 
