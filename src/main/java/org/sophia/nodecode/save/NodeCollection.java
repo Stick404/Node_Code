@@ -5,8 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.sophia.nodecode.networking.NodeStorageS2C;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -123,6 +125,7 @@ public class NodeCollection extends SavedData {
             var nodeStorage = NodeStorage.fromTag(storageVal,uuid);
             data.nodeLocations.put(uuid,nodeStorage);
             extensions.addAll(nodeStorage.getKnownBlocks());
+            nodeStorage.updateClients();
         }
 
         data.extensions = extensions;

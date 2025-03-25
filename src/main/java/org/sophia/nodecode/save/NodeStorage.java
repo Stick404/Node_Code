@@ -3,8 +3,10 @@ package org.sophia.nodecode.save;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.sophia.nodecode.Utils;
+import org.sophia.nodecode.networking.NodeStorageS2C;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,6 +87,7 @@ public class NodeStorage {
         if (canAdd){
             setDirDistance(pos);
             this.knownBlocks.add(pos);
+            updateClients();
         }
         return canAdd;
 
@@ -102,6 +105,7 @@ public class NodeStorage {
             this.dirDistance = Utils.setAxisVal(this.dirDistance,localDir.getAxis(),pos.subtract(centerBlock).get(localDir.getAxis())+localDir.getAxisDirection().getStep()*-1);
             System.out.println(dirDistance);
             System.out.println("Broke Block!");
+            updateClients();
             for(BlockPos remove : this.knownBlocks.stream().toList()){
                 if (remove.get(localDir.getAxis())*localDir.getAxisDirection().getStep() >= pos.get(localDir.getAxis())*localDir.getAxisDirection().getStep()){
                     knownBlocks.remove(remove);
@@ -170,5 +174,8 @@ public class NodeStorage {
         }
         this.dirDistance = Utils.setAxisVal(this.dirDistance,localDir.getAxis(),pos.subtract(centerBlock).get(localDir.getAxis()));
         System.out.println(dirDistance);
+    }
+    public void updateClients(){
+        PacketDistributor.sendToAllPlayers(new NodeStorageS2C(this.centerBlock,this.dirDistance,this.uuid));
     }
 }

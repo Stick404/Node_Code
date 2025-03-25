@@ -45,7 +45,7 @@ public class Nodecode {
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
-        NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> new NodeLevelRendering().render(x));
+        NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> NodeLevelRendering.getInstance().render(x));
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

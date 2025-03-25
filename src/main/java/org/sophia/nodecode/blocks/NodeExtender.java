@@ -6,10 +6,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.sophia.nodecode.networking.NodeStorageS2C;
-
-import java.util.Arrays;
 
 import static org.sophia.nodecode.save.NodeCollection.factory;
 
@@ -24,7 +20,6 @@ public class NodeExtender extends Block {
         if(level instanceof ServerLevel serverLevel){
             var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
             nodeCollection.tryAddExtension(pos);
-            PacketDistributor.sendToAllPlayers(new NodeStorageS2C(new BlockPos(0,0,0),new BlockPos(0,0,0)));
         }
     }
 
