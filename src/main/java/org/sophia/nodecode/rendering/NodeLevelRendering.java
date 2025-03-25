@@ -3,19 +3,20 @@ package org.sophia.nodecode.rendering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.CoreShaders;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.sophia.nodecode.networking.NodeStorageS2C;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import static org.sophia.nodecode.Utils.ID;
 
 public final class NodeLevelRendering {
     private static NodeLevelRendering INSTANCE;
+    public HashMap<UUID,NodeStorageS2C> todos = new HashMap<>();
 
     private NodeLevelRendering(){
     }
@@ -27,7 +28,6 @@ public final class NodeLevelRendering {
         return INSTANCE;
     }
 
-    public HashMap<UUID,NodeStorageS2C> todos = new HashMap<>();
     public void render(RenderLevelStageEvent event){
         if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER && !todos.isEmpty()){
             Tesselator tess = Tesselator.getInstance();

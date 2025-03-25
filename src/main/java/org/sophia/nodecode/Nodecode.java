@@ -17,6 +17,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import org.sophia.nodecode.registries.BlockEntityRegistry;
@@ -24,6 +25,7 @@ import org.sophia.nodecode.registries.BlockRegistry;
 import org.sophia.nodecode.rendering.NodeLevelRendering;
 
 import static org.sophia.nodecode.registries.BlockRegistry.NODE_ROOT_BLOCK_ITEM;
+import static org.sophia.nodecode.save.NodeCollection.factory;
 
 @Mod(Nodecode.MODID)
 public class Nodecode {
@@ -44,8 +46,6 @@ public class Nodecode {
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
-
-        NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> NodeLevelRendering.getInstance().render(x));
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -72,6 +72,7 @@ public class Nodecode {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+        event.getServer().getAllLevels().forEach((z) -> z.getDataStorage().computeIfAbsent(factory,"NodeCollection"));
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -80,6 +81,13 @@ public class Nodecode {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
+            NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, (x) -> NodeLevelRendering.getInstance().render(x));
+
+            NeoForge.EVENT_BUS.addListener(LevelEvent.Load.class, (x) ->{
+                NodeLevelRendering.getInstance().todos.clear();
+                System.out.println("CLEARING!!!");
+            });
+
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
