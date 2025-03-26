@@ -7,7 +7,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import static org.sophia.nodecode.save.NodeCollection.factory;
+import static org.sophia.nodecode.save.ServerNodeCollection.factory;
 
 public class NodeExtender extends Block {
     public NodeExtender(Properties p_49795_) {
@@ -18,7 +18,7 @@ public class NodeExtender extends Block {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if(level instanceof ServerLevel serverLevel){
-            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
+            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
             nodeCollection.tryAddExtension(pos);
         }
     }
@@ -26,7 +26,7 @@ public class NodeExtender extends Block {
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         if (level instanceof ServerLevel serverLevel) {
-            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
+            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
             nodeCollection.removeExtension(pos);
         }
         super.destroy(level, pos, state);

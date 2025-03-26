@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class NodeStorage {
+public class ServerNodeStorage {
     private final HashSet<BlockPos> knownBlocks;
     private final Direction dir; //rather than doing 2 directions, we just assume the 2nd direction is rotated by 90 ClockWise
     private final UUID uuid;
@@ -22,7 +22,7 @@ public class NodeStorage {
     //Eval eval;
     //Add more vals if needed
 
-    public NodeStorage(UUID uuid, BlockPos centerBlock,Direction dir){
+    public ServerNodeStorage(UUID uuid, BlockPos centerBlock, Direction dir){
         this.uuid = uuid;
         this.centerBlock = centerBlock;
         HashSet<BlockPos> tempSet = new HashSet<>();
@@ -32,9 +32,9 @@ public class NodeStorage {
         this.dirDistance = new BlockPos(0,0,0);
     }
 
-    //made for NodeStorage#fromTag
-    //returns a fully made NodeStorage
-    private NodeStorage(UUID uuid, BlockPos centerBlock, HashSet<BlockPos> knownBlocks, Direction dir, BlockPos dirDistance) {
+    //made for ServerNodeStorage#fromTag
+    //returns a fully made ServerNodeStorage
+    private ServerNodeStorage(UUID uuid, BlockPos centerBlock, HashSet<BlockPos> knownBlocks, Direction dir, BlockPos dirDistance) {
         this.uuid = uuid;
         this.centerBlock = centerBlock;
         knownBlocks.add(centerBlock);
@@ -43,7 +43,7 @@ public class NodeStorage {
         this.dirDistance = dirDistance;
     }
 
-    public static NodeStorage fromTag(CompoundTag tag, UUID uuid){
+    public static ServerNodeStorage fromTag(CompoundTag tag, UUID uuid){
         HashSet<BlockPos> knownBlocks = new HashSet<>();
 
         ListTag poses = tag.getList("hashBlocks", Tag.TAG_INT_ARRAY);
@@ -59,7 +59,7 @@ public class NodeStorage {
         var blockPosDir = ((IntArrayTag) tag.get("dirDistance")).getAsIntArray();
         var dirDistance = new BlockPos(blockPosDir[0], blockPosDir[1], blockPosDir[2]);
 
-        return new NodeStorage(uuid, centerBlock, knownBlocks, dir, dirDistance);
+        return new ServerNodeStorage(uuid, centerBlock, knownBlocks, dir, dirDistance);
     }
 
     public CompoundTag save(CompoundTag tag){

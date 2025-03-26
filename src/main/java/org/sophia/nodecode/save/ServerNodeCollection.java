@@ -14,21 +14,21 @@ import java.util.List;
 import java.util.UUID;
 import static org.sophia.nodecode.Nodecode.LOGGER;
 
-public class NodeCollection extends SavedData {
-    public static Factory<NodeCollection> factory = new Factory<>(NodeCollection::create,NodeCollection::load);
+public class ServerNodeCollection extends SavedData {
+    public static Factory<ServerNodeCollection> factory = new Factory<>(ServerNodeCollection::create, ServerNodeCollection::load);
     HashSet<BlockPos> extensions = new HashSet<>();
     //Store all known blocks
-    HashMap<UUID,NodeStorage> nodeLocations = new HashMap<>();
+    HashMap<UUID, ServerNodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
     //TODO: Make the blocks look different if they are in the global extensions (networking :weedhexxy:)
-    //TODO: make a BoundingBox (aabb) for the NodeStorage
+    //TODO: make a BoundingBox (aabb) for the ServerNodeStorage
 
-    public static NodeCollection create() {
-        return new NodeCollection();
+    public static ServerNodeCollection create() {
+        return new ServerNodeCollection();
     }
 
     public void createNodeLocation(UUID uuid, BlockPos pos, Direction dir){
-        NodeStorage storage = new NodeStorage(uuid,pos,dir);
+        ServerNodeStorage storage = new ServerNodeStorage(uuid,pos,dir);
         nodeLocations.put(uuid,storage);
         extensions.add(pos);
         LOGGER.info("making new Location!");
@@ -82,7 +82,7 @@ public class NodeCollection extends SavedData {
         BlockPos x = tryExtension(pos);
         if (x != null){
             for (var str : nodeLocations.entrySet()) {
-                NodeStorage storage = str.getValue();
+                ServerNodeStorage storage = str.getValue();
                 if (storage.addKnownBlock(pos)) {
                     extensions.add(pos);
                     System.out.println("Added Block!");
@@ -98,7 +98,7 @@ public class NodeCollection extends SavedData {
         BlockPos x = tryExtension(pos);
         if (x != null){
             for (var str : nodeLocations.entrySet()) {
-                NodeStorage storage = str.getValue();
+                ServerNodeStorage storage = str.getValue();
                 if (storage.validBlock(pos) != null) {
                     System.out.println("TRUEEEE!");
                     return true;
@@ -109,8 +109,8 @@ public class NodeCollection extends SavedData {
     }
 
 
-    public static NodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        NodeCollection data = NodeCollection.create();
+    public static ServerNodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        ServerNodeCollection data = ServerNodeCollection.create();
 
         ListTag storageList = tag.getList("storages", Tag.TAG_COMPOUND);
         HashSet<BlockPos> extensions = new HashSet<>();
@@ -120,7 +120,7 @@ public class NodeCollection extends SavedData {
             CompoundTag storageVal = tagData.getCompound("storage");
             UUID uuid = tagData.getUUID("uuid");
 
-            var nodeStorage = NodeStorage.fromTag(storageVal,uuid);
+            var nodeStorage = ServerNodeStorage.fromTag(storageVal,uuid);
             data.nodeLocations.put(uuid,nodeStorage);
             extensions.addAll(nodeStorage.getKnownBlocks());
         }
@@ -134,7 +134,7 @@ public class NodeCollection extends SavedData {
         ListTag tag = new ListTag();
         for(var storageTEMP : this.nodeLocations.entrySet()){
             CompoundTag storageTag = new CompoundTag();
-            NodeStorage storage = storageTEMP.getValue();
+            ServerNodeStorage storage = storageTEMP.getValue();
             storageTag.putUUID("uuid",storage.getUuid());
             storageTag.put("storage",storage.save());
             tag.add(storageTag);

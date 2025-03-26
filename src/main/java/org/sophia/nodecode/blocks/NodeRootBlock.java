@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 
-import static org.sophia.nodecode.save.NodeCollection.factory;
+import static org.sophia.nodecode.save.ServerNodeCollection.factory;
 
 public class NodeRootBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING;
@@ -44,7 +44,7 @@ public class NodeRootBlock extends BaseEntityBlock {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (level.getBlockEntity(pos) instanceof NodeRootEntity entity){
             if (level instanceof ServerLevel serverLevel) {
-                var data = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
+                var data = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
                 data.createNodeLocation(entity.getUuid(), pos,state.getValue(FACING));
                 data.setDirty();
             }
@@ -57,7 +57,7 @@ public class NodeRootBlock extends BaseEntityBlock {
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof NodeRootEntity entity && level instanceof ServerLevel serverLevel) {
-            var data = serverLevel.getDataStorage().computeIfAbsent(factory,"NodeCollection");
+            var data = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
             data.removeNodeLocation(entity.getUuid());
         }
         super.destroy(level, pos, state);

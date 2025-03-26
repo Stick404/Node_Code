@@ -26,10 +26,11 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import org.sophia.nodecode.registries.BlockEntityRegistry;
 import org.sophia.nodecode.registries.BlockRegistry;
+import org.sophia.nodecode.registries.ItemRegistry;
 import org.sophia.nodecode.rendering.NodeLevelRendering;
 
 import static org.sophia.nodecode.registries.BlockRegistry.NODE_ROOT_BLOCK_ITEM;
-import static org.sophia.nodecode.save.NodeCollection.factory;
+import static org.sophia.nodecode.save.ServerNodeCollection.factory;
 
 @Mod(Nodecode.MODID)
 public class Nodecode {
@@ -42,6 +43,7 @@ public class Nodecode {
 
         BlockEntityRegistry.init(modEventBus);
         BlockRegistry.init(modEventBus);
+        ItemRegistry.init(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (Nodecode) to respond directly to events.
@@ -76,14 +78,14 @@ public class Nodecode {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
-        event.getServer().getAllLevels().forEach((z) -> z.getDataStorage().computeIfAbsent(factory,"NodeCollection"));
+        event.getServer().getAllLevels().forEach((z) -> z.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection"));
 
         NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,EntityJoinLevelEvent.class,
                 (entityJoinEvent)-> {
                     if (entityJoinEvent.getEntity().getType() == EntityType.PLAYER) {
                         if (entityJoinEvent.getLevel() instanceof ServerLevel level) {
                             System.out.println("UPDATEING PLAYERS");
-                            level.getDataStorage().get(factory, "NodeCollection").updatePlayers(false);
+                            level.getDataStorage().get(factory, "ServerNodeCollection").updatePlayers(false);
                         }
                     }
                 });
@@ -101,6 +103,9 @@ public class Nodecode {
                 NodeLevelRendering.getInstance().clearTodo();
                 System.out.println("CLEARING!!!");
             });
+            //NeoForge.EVENT_BUS.addListener(InputEvent.InteractionKeyMappingTriggered.class, (z) -> {
+            //    System.out.println(z.isPickBlock());
+            //});
 
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
