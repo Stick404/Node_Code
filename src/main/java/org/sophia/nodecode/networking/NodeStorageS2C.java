@@ -7,7 +7,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.sophia.nodecode.rendering.NodeLevelRendering;
+import org.sophia.nodecode.save.ClientNodeCollection;
+import org.sophia.nodecode.save.ClientNodeStorage;
 
 import java.util.UUID;
 
@@ -32,14 +33,14 @@ public record NodeStorageS2C(BlockPos centerBlock, BlockPos dirDistance, UUID uu
         return TYPE;
     }
     public static void handleData(final NodeStorageS2C data, final IPayloadContext context){
-        var inst = NodeLevelRendering.getInstance();
-        var todos = inst.todos;
+        var inst = ClientNodeCollection.get();
+        var todos = inst.getNodeLocations();
 
         inst.setShouldClear(data.shouldClear);
         if(todos.containsKey(data.uuid)){
-            todos.replace(data.uuid,data);
+            todos.replace(data.uuid, new ClientNodeStorage(data.uuid,data.centerBlock,data.dirDistance));
         } else {
-            todos.put(data.uuid,data);
+            todos.put(data.uuid, new ClientNodeStorage(data.uuid,data.centerBlock,data.dirDistance));
         }
     }
 }

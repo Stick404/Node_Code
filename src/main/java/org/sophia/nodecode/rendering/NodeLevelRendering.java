@@ -5,58 +5,30 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.CoreShaders;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import org.sophia.nodecode.networking.NodeStorageS2C;
-
-import java.util.HashMap;
-import java.util.UUID;
+import org.sophia.nodecode.save.ClientNodeCollection;
 
 import static org.sophia.nodecode.Utils.ID;
 
 public final class NodeLevelRendering {
-    private static NodeLevelRendering INSTANCE;
-    public HashMap<UUID,NodeStorageS2C> todos = new HashMap<>();
-    private boolean shouldClear = true;
-
-    private NodeLevelRendering(){
-    }
-
-    public void clearTodo(){
-        if (!shouldClear) {
-            shouldClear = true;
-            return;
-        }
-        todos.clear();
-    }
-
-    public void setShouldClear(boolean shouldClear) {
-        this.shouldClear = shouldClear;
-    }
-
-    public static NodeLevelRendering getInstance(){
-        if(INSTANCE == null){
-            INSTANCE = new NodeLevelRendering();
-        }
-        return INSTANCE;
-    }
-
-    public void render(RenderLevelStageEvent event){
-        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER && !todos.isEmpty()){
+    public static void render(RenderLevelStageEvent event){
+        var collection = ClientNodeCollection.get();
+        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER && !collection.getNodeLocations().isEmpty()){
             Tesselator tess = Tesselator.getInstance();
             event.getStage();
             var color = 0x99_FFFFFF;
             var camPos = event.getCamera().getPosition();
 
-            for (var nodeSystemTEMP : todos.entrySet()) {
+            for (var nodeSystemTEMP : collection.getNodeLocations().entrySet()) {
                 var nodeSystem = nodeSystemTEMP.getValue();
                 var stack = event.getPoseStack();
                 stack.pushPose();
                 BufferBuilder buff = tess.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.BLOCK);
-                //ForLoop
-                stack.translate(nodeSystem.centerBlock().getCenter().subtract(camPos));
-                var dirDist = nodeSystem.dirDistance();
+
+                stack.translate(nodeSystem.centerBlock.getCenter().subtract(camPos));
+                var dirDist = nodeSystem.getDirDistance();
                 stack.scale(dirDist.getX()*-1,dirDist.getY(),dirDist.getZ()*-1);
 
-                //Rotation shit here!
+
 
                 stack.mulPose(Axis.YP.rotationDegrees(90));
                 RenderingUtils.makeDoubleSideSquare(buff, color, stack);
@@ -79,7 +51,7 @@ public final class NodeLevelRendering {
                 RenderSystem.disableBlend();
                 RenderSystem.enableDepthTest();
                 stack.popPose();
-            }//ForLoop
+            }
 
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F); //KEEP THIS LINE OR ELSE BLUE
         }

@@ -15,7 +15,7 @@ public class ClientNodeCollection {
     private ClientNodeCollection(){
     }
 
-    public ClientNodeCollection get(){
+    public static ClientNodeCollection get(){
         if (INSTANCE == null){
             return INSTANCE = new ClientNodeCollection();
         }
@@ -48,5 +48,8 @@ public class ClientNodeCollection {
 
     public void removeStorage(UUID uuid){
         this.nodeLocations.remove(uuid);
+    }
+    public HashMap<UUID,ClientNodeStorage> getNodeLocations(){
+        return this.nodeLocations;
     }
 }
