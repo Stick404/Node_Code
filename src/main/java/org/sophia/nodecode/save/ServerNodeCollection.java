@@ -21,7 +21,6 @@ public class ServerNodeCollection extends SavedData {
     HashMap<UUID, ServerNodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
     //TODO: Make the blocks look different if they are in the global extensions (networking :weedhexxy:)
-    //TODO: make a BoundingBox (aabb) for the ServerNodeStorage
 
     public static ServerNodeCollection create() {
         return new ServerNodeCollection();

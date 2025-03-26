@@ -20,6 +20,9 @@ public final class NodeLevelRendering {
 
             for (var nodeSystemTEMP : collection.getNodeLocations().entrySet()) {
                 var nodeSystem = nodeSystemTEMP.getValue();
+                if (!nodeSystem.isShouldRender()){
+                    return;
+                }
                 var stack = event.getPoseStack();
                 stack.pushPose();
                 BufferBuilder buff = tess.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.BLOCK);

@@ -24,6 +24,10 @@ public class ClientNodeStorage {
         this.shouldRender = bool;
     }
 
+    public boolean isShouldRender() {
+        return shouldRender;
+    }
+
     public BlockPos getDirDistance() {
         return dirDistance;
     }
