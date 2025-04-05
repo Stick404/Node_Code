@@ -1,6 +1,9 @@
 package org.sophia.nodecode.items;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -18,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestingItem extends Item {
+public class NodeClicker extends Item {
     public static int MAX_DIST = 5;
-    public TestingItem(Properties properties) {
+    public NodeClicker(Properties properties) {
         super(properties);
     }
 
@@ -56,16 +59,24 @@ public class TestingItem extends Item {
                 }
                 if (side1.contains(vec)){
                     System.out.println("X SIDE!");
+                    player.displayClientMessage(Component.literal("X SIDE!"),false);
                     //TODO: Do something with the nodes!
-                    return InteractionResult.SUCCESS;
+                    return editNodes(player,vec,storage);
                 }
                 if (side2.contains(vec)){
                     System.out.println("Z SIDE!");
+                    player.displayClientMessage(Component.literal("Z SIDE!"),false);
                     //TODO: Do something with the nodes!
-                    return InteractionResult.SUCCESS;
+                    return editNodes(player,vec,storage);
                 }
             }
         }
         return InteractionResult.FAIL;
+    }
+    private static InteractionResult editNodes(Player player, Vec3 vec, ClientNodeStorage storage){
+        player.playSound(SoundEvent.createFixedRangeEvent(
+                ResourceLocation.fromNamespaceAndPath("minecraft","entity.experience_orb.pickup"),3f),0.2f,0.1f);
+        player.displayClientMessage(Component.literal(String.valueOf(storage.centerBlock.getCenter().subtract(vec))),false);
+        return InteractionResult.SUCCESS;
     }
 }
