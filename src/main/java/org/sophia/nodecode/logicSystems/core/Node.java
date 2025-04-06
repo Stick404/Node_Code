@@ -30,8 +30,11 @@ public abstract class Node {
     }
 
     //Connects a node to a specific slot
-    public void connect(Request request,Integer thisSlot) {
-        this.inputs[thisSlot] = request;
+    public void connect(Request request) {
+        this.inputs[request.targetSlot()] = request;
+    }
+    public void connect(Node node, Integer pullSlot, Integer targetSlot){
+        connect(new Request(node, pullSlot, targetSlot));
     }
 
     //Removes a node from a specific slot

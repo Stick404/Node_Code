@@ -16,17 +16,17 @@ public class Testing {
         NodeDoubleInput input2 = new NodeDoubleInput(env, 2.0);
         //Makes a new input node with TypeString as in put, and with a value of "Hello!"
         NodeAdd add = new NodeAdd(env);
-        add.connect(new Request(input,0),0);
-        add.connect(new Request(input2,0),1);
+        add.connect(input,0,0);
+        add.connect(input2,0,1);
 
 
         NodeAdd addAgain = new NodeAdd(env);
-        addAgain.connect(new Request(add, 0),0);
-        addAgain.connect(new Request(input, 0),1);
+        addAgain.connect(add, 0,0);
+        addAgain.connect(input, 0, 1);
 
 
         NodePrint print = new NodePrint(env);
-        print.connect(new Request(addAgain,0),0);  //print the output of the other node
+        print.connect(addAgain,0, 0);  //print the output of the other node
 
         env.run(print);
 

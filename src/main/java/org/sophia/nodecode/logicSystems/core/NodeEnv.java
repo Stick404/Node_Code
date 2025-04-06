@@ -72,12 +72,12 @@ public class NodeEnv {
                 //do type checking here
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
                     //if Class wanted is not input, or any, then throw an error
-                    if (input.node().getOutputTypes()[input.slot()].getClass() != node.getInputTypes()[i].getClass() && node.getInputTypes()[i].getClass() != TypeObject.class){
+                    if (input.node().getOutputTypes()[input.pullSlot()].getClass() != node.getInputTypes()[i].getClass() && node.getInputTypes()[i].getClass() != TypeObject.class){
                         throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
-                                " got: " + input.node().getOutputTypes()[input.slot()]);
+                                " got: " + input.node().getOutputTypes()[input.pullSlot()]);
                     }
 
-                    inputs[i] = this.outputs.get(input.node().uuid)[input.slot()];
+                    inputs[i] = this.outputs.get(input.node().uuid)[input.pullSlot()];
                     i++;
                 }
                 var output = node.run(inputs);
