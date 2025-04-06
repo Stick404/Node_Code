@@ -21,7 +21,7 @@ public class Main {
 
         add.connect(new Request(input1, 0),0); //connect Add Slot 0 to input1 slot 0
         add.connect(new Request(input2, 0),1); //connect Add Slot 1 to input2 slot 0
-        NodePrint print = new NodePrint(env); //make a new Print Node
+        NodePrint print = new NodePrint(); //make a new Print Node
 
         print.connect(new Request(add,0),0); //connect Print Slot 0 to add slot 0
 

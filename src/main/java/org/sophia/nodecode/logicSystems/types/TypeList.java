@@ -8,6 +8,7 @@ public class TypeList extends DataType<ArrayList> {
     public TypeList(ArrayList<?> initVal) {
         super(ArrayList.class, initVal);
     }
+
     public TypeList(){
         this(new ArrayList<>());
     }

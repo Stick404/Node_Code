@@ -1,17 +1,31 @@
 package org.sophia.nodecode.logicSystems.nodes;
 
-import range.main.core.DataType;
-import range.main.core.Node;
-import range.main.core.NodeEnv;
-import range.main.types.TypeObject;
+import org.sophia.nodecode.logicSystems.core.DataType;
+import org.sophia.nodecode.logicSystems.core.Node;
+import org.sophia.nodecode.logicSystems.core.NodeEnv;
+
+import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_ANY;
 
 public class NodePrint extends Node {
-    public NodePrint(NodeEnv env) {
-        super(env,
-                new Class[]{TypeObject.class},
-                new Class[0] //No output needed, so set to empty
 
-        );
+    public NodePrint() {
+        super();
+    }
+
+    public NodePrint(NodeEnv env) {
+        super(env);
+    }
+
+    @Override
+    public DataType[] getInputTypes() {
+        return new DataType[]{
+                TYPE_ANY.get(),
+        };
+    }
+
+    @Override
+    public DataType[] getOutputTypes() {
+        return super.getOutputTypes();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.sophia.nodecode.logicSystems.core;
 
-import org.sophia.nodecode.logicSystems.core.registries.TypeRegistry;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
 import java.util.HashMap;
@@ -14,7 +13,6 @@ public class NodeEnv {
     public HashMap<UUID, DataType<?>[]> outputs; // Holds all the outputs of nodes
 
     public NodeEnv(){
-        TypeRegistry.init();
         outputs = new HashMap<>();
         nodes = new HashMap<>();
     }
@@ -22,6 +20,10 @@ public class NodeEnv {
     public NodeEnv(Node root){
         this();
         this.root = root;
+    }
+
+    public void addNode() {
+
     }
 
     //prepares the NodeEnv to be ran or saving
@@ -66,7 +68,7 @@ public class NodeEnv {
                 int i = 0;
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
                     //if Class wanted is not input, or any, then throw an error
-                    if (input.node().getOutputTypes()[input.slot()] != node.getInputTypes()[i] && node.getInputTypes()[i] != TypeObject.class){
+                    if (input.node().getOutputTypes()[input.slot()] != node.getInputTypes()[i] && node.getInputTypes()[i].getClass() != TypeObject.class){
                         throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
                                 " got: " + input.node().getOutputTypes()[input.slot()]);
                     }

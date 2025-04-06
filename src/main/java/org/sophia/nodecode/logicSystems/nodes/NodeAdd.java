@@ -5,14 +5,29 @@ import org.sophia.nodecode.logicSystems.core.Node;
 import org.sophia.nodecode.logicSystems.core.NodeEnv;
 import org.sophia.nodecode.logicSystems.types.TypeDouble;
 
-import static org.sophia.nodecode.logicSystems.core.registries.TypeRegistry.DOUBLE;
+import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_DOUBLE;
 
 public class NodeAdd extends Node {
+
+    public NodeAdd() {
+        super();
+    }
+
     public NodeAdd(NodeEnv env) {
-        super(env,
-                new Class[]{DOUBLE,DOUBLE},
-                new Class[]{DOUBLE}
-        );
+        super(env);
+    }
+
+    @Override
+    public DataType[] getInputTypes() {
+        return new DataType[]{
+                TYPE_DOUBLE.get(),
+                TYPE_DOUBLE.get()
+        };
+    }
+
+    @Override
+    public DataType[] getOutputTypes() {
+        return new DataType[]{TYPE_DOUBLE.get()};
     }
 
     @Override

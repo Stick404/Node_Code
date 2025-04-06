@@ -1,8 +1,8 @@
 package org.sophia.nodecode.logicSystems.nodes;
 
-import range.main.core.DataType;
-import range.main.core.Node;
-import range.main.core.NodeEnv;
+import org.sophia.nodecode.logicSystems.core.DataType;
+import org.sophia.nodecode.logicSystems.core.Node;
+import org.sophia.nodecode.logicSystems.core.NodeEnv;
 
 public class NodeInput<T> extends Node {
     private Class<? extends DataType<T>> type;

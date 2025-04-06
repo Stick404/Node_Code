@@ -1,24 +1,33 @@
 package org.sophia.nodecode.logicSystems.core;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 
 public abstract class Node {
     public NodeEnv env; //the Env that this node belongs too
     public Request[] inputs, outputs; //the children this node knows
-    public final UUID uuid; //UUID of the node
-    public final Class<? extends DataType<?>>[] inputTypes;
-    public final Class<? extends DataType<?>>[] outputTypes;
+    public UUID uuid; //UUID of the node
+    public Class<? extends DataType<?>>[] inputTypes;
+    public Class<? extends DataType<?>>[] outputTypes;
 
-    public Node(NodeEnv env, Class<? extends DataType<?>>[] inputTypes, Class<? extends DataType<?>>[] outputTypes){
+    public Node(){
+        this(null);
+    }
+
+    public Node(@Nullable NodeEnv env){
         this.env = env;
         this.uuid = UUID.randomUUID();
-
-        this.inputTypes = inputTypes;
-        this.outputTypes = outputTypes;
-
         this.inputs = new Request[inputTypes.length];
-
         env.nodes.put(this.uuid,this);
+    }
+
+    public DataType[] getInputTypes() {
+        return new DataType[0];
+    }
+
+    public DataType[] getOutputTypes() {
+        return new DataType[0];
     }
 
     //Connects a node to a specific slot
@@ -50,14 +59,6 @@ public abstract class Node {
 
     public Request[] getOutputs() {
         return outputs;
-    }
-
-    public Class<? extends DataType<?>>[] getInputTypes() {
-        return inputTypes;
-    }
-
-    public Class<? extends DataType<?>>[] getOutputTypes() {
-        return outputTypes;
     }
 
     public UUID getUuid() {
