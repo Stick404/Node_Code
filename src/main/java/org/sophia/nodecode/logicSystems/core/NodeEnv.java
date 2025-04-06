@@ -2,10 +2,7 @@ package org.sophia.nodecode.logicSystems.core;
 
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
-import java.util.UUID;
+import java.util.*;
 
 import static org.sophia.nodecode.registries.NodeRegistry.NODES;
 
@@ -20,15 +17,6 @@ public class NodeEnv {
         nodes = new HashMap<>();
     }
 
-    public NodeEnv(Node root){
-        this();
-        this.root = root;
-    }
-
-    public void addNode() {
-
-    }
-
     //prepares the NodeEnv to be ran or saving
     public Stack<? extends Node> read() {
         if (this.root == null){
@@ -39,9 +27,14 @@ public class NodeEnv {
         Stack<Node> finding = new Stack<>();
         List<Node> toRun = new Stack<>();
         finding.add(root);
+
+        HashSet<Class<? extends Node>> registeredTypes = new HashSet<>();
+        for (var z : NODES.getEntries()) {
+            registeredTypes.add(z.get().getClass());
+        }
         while (!finding.empty()){
             var top = finding.pop();
-            if (!NODES.getEntries().contains(top.getClass())) throw new NodeExecutionError("Found unregistered node of: " + top.getClass());
+            if (!registeredTypes.contains(top.getClass())) throw new NodeExecutionError("Tried to run unregistered node of: " + top.getClass());
 
             toRun.add(top);
             for (Request child : top.getInputs()){
@@ -74,7 +67,7 @@ public class NodeEnv {
 
                 //do type checking here
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
-                    //if Class wanted is not input, or any, then throw an error
+                    //if Class wanted is not input class, or any, then throw an error
                     if (input.node().getOutputTypes()[input.pullSlot()].getClass() != node.getInputTypes()[i].getClass() && node.getInputTypes()[i].getClass() != TypeObject.class){
                         throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
                                 " got: " + input.node().getOutputTypes()[input.pullSlot()]);
@@ -91,7 +84,6 @@ public class NodeEnv {
             }
         } catch (RuntimeException e) {
             System.out.println(e); //Handle the error :clueless:
-            System.out.println(e.fillInStackTrace());
         }
         outputs.clear(); //so you cant read the old data of nodes
     }
