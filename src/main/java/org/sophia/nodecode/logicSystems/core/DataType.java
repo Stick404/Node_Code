@@ -14,6 +14,7 @@ public abstract class DataType<T> {
     }
 
     public void setData(T data) {
+        if (data.getClass() != type) throw new NodeExecutionError("Tried to insert wrong type of data!");
         this.data = data;
     }
 

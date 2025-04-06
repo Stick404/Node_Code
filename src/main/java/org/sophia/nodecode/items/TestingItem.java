@@ -5,8 +5,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-
-import static org.sophia.nodecode.registries.CustomRegistries.DATA_TYPE_REGISTRY;
+import org.sophia.nodecode.logicSystems.Testing;
 
 public class TestingItem extends Item {
     public static int MAX_DIST = 5;
@@ -17,7 +16,7 @@ public class TestingItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         try{
-            System.out.println(DATA_TYPE_REGISTRY.getAny());
+            Testing.testing();
         } catch (Exception e) {
             System.out.println(e);
         }

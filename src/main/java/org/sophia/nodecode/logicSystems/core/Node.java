@@ -18,7 +18,8 @@ public abstract class Node {
     public Node(@Nullable NodeEnv env){
         this.env = env;
         this.uuid = UUID.randomUUID();
-        this.inputs = new Request[inputTypes.length];
+        this.inputs = new Request[getInputTypes().length];
+        this.outputs = new Request[getOutputTypes().length];
         env.nodes.put(this.uuid,this);
     }
 
@@ -42,7 +43,7 @@ public abstract class Node {
 
     //Returns an array of outputs
     protected DataType<?>[] run() {
-        DataType<?>[] outputs = new DataType[this.outputTypes.length];
+        DataType<?>[] outputs = new DataType[getOutputTypes().length];
         return outputs;
     }
 

@@ -63,7 +63,6 @@ public class NodeEnv {
             if (toRun == null) {read();}
             for (Node node : this.toRun) {
                 //do type checking here
-                System.out.println(node.getUuid());
 
                 int i = 0;
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
@@ -82,6 +81,7 @@ public class NodeEnv {
             }
         } catch (RuntimeException e) {
             System.out.println(e); //Handle the error :clueless:
+            System.out.println(e.fillInStackTrace());
         }
         outputs.clear(); //so you cant read the old data of nodes
     }
