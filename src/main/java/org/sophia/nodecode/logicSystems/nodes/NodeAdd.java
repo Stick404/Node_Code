@@ -31,10 +31,10 @@ public class NodeAdd extends Node {
     }
 
     @Override
-    public DataType<?>[] run() {
-        DataType<?>[] data = super.run();
+    public DataType<?>[] run(DataType<?>[] inputs) {
+        DataType<?>[] data = super.run(inputs);
 
-        data[0] = new TypeDouble((Double) get(0).getData() + (Double) get(1).getData());
+        data[0] = new TypeDouble((Double) inputs[0].getData() + (Double) inputs[1].getData());
         return data;
     }
 }

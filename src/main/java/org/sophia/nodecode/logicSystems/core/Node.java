@@ -42,16 +42,9 @@ public abstract class Node {
     }
 
     //Returns an array of outputs
-    protected DataType<?>[] run() {
+    protected DataType<?>[] run(DataType<?>[] inputs) {
         DataType<?>[] outputs = new DataType[getOutputTypes().length];
         return outputs;
-    }
-
-    protected DataType<?> get(Integer slot) {
-        Request request = this.inputs[slot];
-        if (request == null) throw new NodeExecutionError("No input node found for slot: " + slot);
-
-        return this.env.outputs.get(request.node().uuid)[request.slot()];
     }
 
     public Request[] getInputs() {

@@ -31,6 +31,7 @@ public class NodeEnv {
         if (this.root == null){
             throw new NodeExecutionError("Root is Null");
         }
+        //TODO: Make this not make an inf loop!
 
         Stack<Node> finding = new Stack<>();
         Stack<Node> toRun = new Stack<>();
@@ -62,19 +63,23 @@ public class NodeEnv {
         try {
             if (toRun == null) {read();}
             for (Node node : this.toRun) {
-                //do type checking here
 
+                DataType<?>[] inputs = new DataType[node.getInputs().length +1];
                 int i = 0;
+
+                //do type checking here
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
                     //if Class wanted is not input, or any, then throw an error
-                    if (input.node().getOutputTypes()[input.slot()] != node.getInputTypes()[i] && node.getInputTypes()[i].getClass() != TypeObject.class){
+                    if (input.node().getOutputTypes()[input.slot()].getClass() != node.getInputTypes()[i].getClass() && node.getInputTypes()[i].getClass() != TypeObject.class){
                         throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
                                 " got: " + input.node().getOutputTypes()[input.slot()]);
                     }
+
+                    inputs[i] = this.outputs.get(input.node().uuid)[input.slot()];
                     i++;
                 }
+                var output = node.run(inputs);
 
-                var output = node.run();
                 if (output.length > 0 && output[0] != null) {
                     outputs.put(node.uuid, output);
                 }

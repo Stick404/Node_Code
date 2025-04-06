@@ -29,9 +29,10 @@ public class NodePrint extends Node {
     }
 
     @Override
-    public DataType<?>[] run() {
-        DataType<?>[] data = super.run();
-        System.out.println(get(0).getData());
+    public DataType<?>[] run(DataType<?>[] inputs) {
+        DataType<?>[] data = super.run(inputs);
+
+        System.out.println(inputs[0].getData());
         return data;
     }
 }

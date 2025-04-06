@@ -31,7 +31,7 @@ public class NodeInput extends Node {
     }
 
     @Override
-    protected DataType<?>[] run() {
+    protected DataType<?>[] run(DataType<?>[] inputs) {
         try {
             var z = type.getClass().getConstructor().newInstance();
             z.setData(this.value);
