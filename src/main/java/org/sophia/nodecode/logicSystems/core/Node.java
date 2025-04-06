@@ -10,7 +10,6 @@ public abstract class Node {
     public UUID uuid; //UUID of the node
 
     public Node(){
-        this(null);
     }
 
     public Node(@Nullable NodeEnv env){

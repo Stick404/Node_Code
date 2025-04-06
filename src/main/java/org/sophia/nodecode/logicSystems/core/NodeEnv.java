@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
+import static org.sophia.nodecode.registries.NodeRegistry.NODES;
+
 public class NodeEnv {
     public Node root; // Root is the last node in the graph
     public HashMap<UUID,Node> nodes; // All known nodes
@@ -39,8 +41,9 @@ public class NodeEnv {
         finding.add(root);
         while (!finding.empty()){
             var top = finding.pop();
-            toRun.add(top);
+            if (!NODES.getEntries().contains(top.getClass())) throw new NodeExecutionError("Found unregistered node of: " + top.getClass());
 
+            toRun.add(top);
             for (Request child : top.getInputs()){
                 if (child != null){
                     toRun.remove(child.node()); //If a node is already in the stack, move it up

@@ -8,6 +8,10 @@ import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_DOUBLE;
 
 public class NodeDoubleInput extends NodeInput<Double>{
 
+    public NodeDoubleInput(){
+        super();
+    }
+
     public NodeDoubleInput(NodeEnv env, Double val){
         super(env,new TypeDouble(),val);
     }

@@ -24,10 +24,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
-import org.sophia.nodecode.registries.BlockEntityRegistry;
-import org.sophia.nodecode.registries.BlockRegistry;
-import org.sophia.nodecode.registries.DataTypeRegistry;
-import org.sophia.nodecode.registries.ItemRegistry;
+import org.sophia.nodecode.registries.*;
 import org.sophia.nodecode.rendering.NodeLevelRendering;
 import org.sophia.nodecode.save.ClientNodeCollection;
 
@@ -47,6 +44,7 @@ public class Nodecode {
         BlockRegistry.init(modEventBus);
         ItemRegistry.init(modEventBus);
         DataTypeRegistry.init(modEventBus);
+        NodeRegistry.init(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (Nodecode) to respond directly to events.
