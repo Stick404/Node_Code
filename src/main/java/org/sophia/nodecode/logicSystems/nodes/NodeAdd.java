@@ -9,6 +9,9 @@ import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_DOUBLE;
 
 public class NodeAdd extends Node {
 
+    public final static DataType[] inputTypes = new DataType[]{TYPE_DOUBLE.get(),TYPE_DOUBLE.get()};
+    public final static DataType[] outputTypes = new DataType[]{TYPE_DOUBLE.get()};
+
     public NodeAdd() {
         super();
     }
@@ -18,21 +21,15 @@ public class NodeAdd extends Node {
     }
 
     public DataType[] getInputTypes() {
-        return new DataType[]{
-                TYPE_DOUBLE.get(),
-                TYPE_DOUBLE.get()
-        };
+        return inputTypes;
     }
 
     public DataType[] getOutputTypes() {
-        return new DataType[]{TYPE_DOUBLE.get()};
+        return outputTypes;
     }
 
     @Override
-    public DataType<?>[] run(DataType<?>[] inputs) {
-        DataType<?>[] data = super.run(inputs);
-
-        data[0] = new TypeDouble((Double) inputs[0].getData() + (Double) inputs[1].getData());
-        return data;
+    public static DataType<?>[] run(DataType<?>[] inputs) {
+        return new DataType<?>[]{new TypeDouble((Double) inputs[0].getData() + (Double) inputs[1].getData())};
     }
 }

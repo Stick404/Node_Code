@@ -9,6 +9,9 @@ public abstract class Node {
     public Request[] inputs, outputs; //the children this node knows
     public UUID uuid; //UUID of the node
 
+    public final static DataType[] inputTypes = new DataType[]{};
+    public final static DataType[] outputTypes = new DataType[]{};
+
     public Node(){
     }
 
@@ -21,11 +24,11 @@ public abstract class Node {
     }
 
     public DataType[] getInputTypes() {
-        return new DataType[0];
+        return inputTypes;
     }
 
     public DataType[] getOutputTypes() {
-        return new DataType[0];
+        return outputTypes;
     }
 
     //Connects a node to a specific slot
