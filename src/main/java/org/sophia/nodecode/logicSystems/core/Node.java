@@ -8,8 +8,6 @@ public abstract class Node {
     public NodeEnv env; //the Env that this node belongs too
     public Request[] inputs, outputs; //the children this node knows
     public UUID uuid; //UUID of the node
-    public Class<? extends DataType<?>>[] inputTypes;
-    public Class<? extends DataType<?>>[] outputTypes;
 
     public Node(){
         this(null);

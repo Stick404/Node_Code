@@ -18,6 +18,8 @@ public abstract class DataType<T> {
         this.data = data;
     }
 
+    //TODO: Make each type have a Tag save/load
+
     public Class<T> getType() {
         return type;
     }
