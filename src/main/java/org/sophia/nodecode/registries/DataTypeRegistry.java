@@ -18,6 +18,7 @@ public class DataTypeRegistry {
     public static final DeferredHolder<DataType<?>, TypeNull> TYPE_NULL = TYPES.register("null", () -> new TypeNull());
     public static final DeferredHolder<DataType<?>, TypeObject> TYPE_ANY = TYPES.register("any", () -> new TypeObject());
     public static final DeferredHolder<DataType<?>, TypeString> TYPE_STRING = TYPES.register("string", () -> new TypeString());
+    public static final DeferredHolder<DataType<?>, TypeBlockPos> TYPE_BLOCK_POS = TYPES.register("block_pos", () -> new TypeBlockPos());
 
     public static void init(IEventBus bus){
         TYPES.register(bus);

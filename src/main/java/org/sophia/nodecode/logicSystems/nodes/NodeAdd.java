@@ -17,7 +17,6 @@ public class NodeAdd extends Node {
         super(env);
     }
 
-    @Override
     public DataType[] getInputTypes() {
         return new DataType[]{
                 TYPE_DOUBLE.get(),
@@ -25,7 +24,6 @@ public class NodeAdd extends Node {
         };
     }
 
-    @Override
     public DataType[] getOutputTypes() {
         return new DataType[]{TYPE_DOUBLE.get()};
     }

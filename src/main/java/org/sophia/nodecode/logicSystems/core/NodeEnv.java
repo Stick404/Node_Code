@@ -3,6 +3,7 @@ package org.sophia.nodecode.logicSystems.core;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class NodeEnv {
         //TODO: Make this not make an inf loop!
 
         Stack<Node> finding = new Stack<>();
-        Stack<Node> toRun = new Stack<>();
+        List<Node> toRun = new Stack<>();
         finding.add(root);
         while (!finding.empty()){
             var top = finding.pop();
@@ -42,6 +43,7 @@ public class NodeEnv {
 
             for (Request child : top.getInputs()){
                 if (child != null){
+                    toRun.remove(child.node()); //If a node is already in the stack, move it up
                     finding.push(child.node());
                 }
             }
@@ -64,7 +66,7 @@ public class NodeEnv {
             if (toRun == null) {read();}
             for (Node node : this.toRun) {
 
-                DataType<?>[] inputs = new DataType[node.getInputs().length +1];
+                DataType<?>[] inputs = new DataType[node.getInputs().length];
                 int i = 0;
 
                 //do type checking here

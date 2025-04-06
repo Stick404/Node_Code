@@ -16,14 +16,12 @@ public class NodePrint extends Node {
         super(env);
     }
 
-    @Override
     public DataType[] getInputTypes() {
         return new DataType[]{
                 TYPE_ANY.get(),
         };
     }
 
-    @Override
     public DataType[] getOutputTypes() {
         return super.getOutputTypes();
     }
