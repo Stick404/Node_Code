@@ -29,7 +29,7 @@ public class NodeAdd extends Node {
     }
 
     @Override
-    public static DataType<?>[] run(DataType<?>[] inputs) {
+    public DataType<?>[] run(DataType<?>[] inputs) {
         return new DataType<?>[]{new TypeDouble((Double) inputs[0].getData() + (Double) inputs[1].getData())};
     }
 }

@@ -26,7 +26,12 @@ public abstract class NodeInput<T> extends Node {
 
     @Override
     protected DataType<?>[] run(DataType<?>[] inputs) {
-        type.setData(this.value);
-        return new DataType[]{type};
+        DataType output = null;
+        try {
+            output = type.getClass().getConstructor(this.type.getType()).newInstance(this.value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new DataType[]{output};
     }
 }

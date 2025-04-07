@@ -1,8 +1,8 @@
 package org.sophia.nodecode.logicSystems.core;
 
 public abstract class DataType<T> {
-    private T data;
-    private Class<T> type;
+    private final T data;
+    private final Class<T> type;
 
     public DataType(Class<T> type, T initVal){
         this.data = initVal;
@@ -11,11 +11,6 @@ public abstract class DataType<T> {
 
     public T getData() {
         return data;
-    }
-
-    public void setData(T data) {
-        if (data.getClass() != type) throw new NodeExecutionError("Tried to insert wrong type of data!");
-        this.data = data;
     }
 
     //TODO: Make each type have a Tag save/load

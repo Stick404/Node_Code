@@ -1,10 +1,14 @@
 package org.sophia.nodecode.logicSystems;
 
 import org.sophia.nodecode.logicSystems.core.NodeEnv;
-import org.sophia.nodecode.logicSystems.core.Request;
 import org.sophia.nodecode.logicSystems.nodes.NodeAdd;
+import org.sophia.nodecode.logicSystems.nodes.NodeAppendList;
 import org.sophia.nodecode.logicSystems.nodes.NodePrint;
+import org.sophia.nodecode.logicSystems.nodes.inputs.NodeListInput;
 import org.sophia.nodecode.logicSystems.nodes.inputs.NodeDoubleInput;
+import org.sophia.nodecode.logicSystems.nodes.inputs.NodeStringInput;
+
+import java.util.ArrayList;
 
 public class Testing {
     public static void testing() {
@@ -28,8 +32,23 @@ public class Testing {
         NodePrint print = new NodePrint(env);
         print.connect(addAgain,0, 0);  //print the output of the other node
 
-        env.run(print);
-
         System.out.println("Finished run!");
+        NodeEnv env1 = new NodeEnv();
+        NodeStringInput string1 = new NodeStringInput(env1,"Hello");
+        NodeStringInput string2 = new NodeStringInput(env1, "World!");
+        NodeListInput array = new NodeListInput(env, new ArrayList<>());
+
+        NodeAppendList append1 = new NodeAppendList(env);
+        append1.connect(array,0,0);
+        append1.connect(string1,0,1);
+
+        NodeAppendList append2 = new NodeAppendList(env);
+        append2.connect(append1,0,0);
+        append2.connect(string2,0,1);
+
+        NodePrint print1 = new NodePrint(env);
+        print1.connect(append2,0,0);
+
+        env.run(print1);
     }
 }

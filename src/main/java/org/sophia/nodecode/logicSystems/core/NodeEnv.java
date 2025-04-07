@@ -1,5 +1,8 @@
 package org.sophia.nodecode.logicSystems.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.sophia.nodecode.logicSystems.types.TypeNull;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
 import java.util.*;
@@ -7,6 +10,7 @@ import java.util.*;
 import static org.sophia.nodecode.registries.NodeRegistry.NODES;
 
 public class NodeEnv {
+    private static final Logger log = LogManager.getLogger(NodeEnv.class);
     public Node root; // Root is the last node in the graph
     public HashMap<UUID,Node> nodes; // All known nodes
     public Stack<? extends Node> toRun; // The order to run all nodes
@@ -62,24 +66,33 @@ public class NodeEnv {
             if (toRun == null) {read();}
             for (Node node : this.toRun) {
 
-                DataType<?>[] inputs = new DataType[node.getInputs().length];
+                DataType<?>[] inputs = new DataType[node.getInputs().length +1];
                 int i = 0;
 
                 //do type checking here
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
                     //if Class wanted is not input class, or any, then throw an error
-                    if (input.node().getOutputTypes()[input.pullSlot()].getClass() != node.getInputTypes()[i].getClass() && node.getInputTypes()[i].getClass() != TypeObject.class){
-                        throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
-                                " got: " + input.node().getOutputTypes()[input.pullSlot()]);
+                    if (input != null) {
+                        if (input.node().getOutputTypes()[input.pullSlot()].getClass() != node.getInputTypes()[i].getClass()
+                                && node.getInputTypes()[i].getClass() != TypeObject.class) {
+                            throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
+                                    " got: " + input.node().getOutputTypes()[input.pullSlot()]);
+                        }
+                        inputs[i] = this.outputs.get(input.node().uuid)[input.pullSlot()];
+                    } else {
+                        inputs[i] = new TypeNull(); //in case there is no input, make it null
                     }
-
-                    inputs[i] = this.outputs.get(input.node().uuid)[input.pullSlot()];
                     i++;
                 }
-                var output = node.run(inputs);
-
+                DataType<?>[] output = null;
+                try {
+                    output = node.run(inputs);
+                } catch (NullPointerException e) {
+                    throw new NodeExecutionError("Null Value found!");
+                }
                 if (output.length > 0 && output[0] != null) {
                     outputs.put(node.uuid, output);
+                    //System.out.println(output[0].getData());
                 }
             }
         } catch (RuntimeException e) {
