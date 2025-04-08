@@ -1,7 +1,5 @@
 package org.sophia.nodecode.logicSystems.core;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.sophia.nodecode.logicSystems.types.TypeNull;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
@@ -10,7 +8,6 @@ import java.util.*;
 import static org.sophia.nodecode.registries.NodeRegistry.NODES;
 
 public class NodeEnv {
-    private static final Logger log = LogManager.getLogger(NodeEnv.class);
     public Node root; // Root is the last node in the graph
     public HashMap<UUID,Node> nodes; // All known nodes
     public Stack<? extends Node> toRun; // The order to run all nodes
@@ -30,6 +27,7 @@ public class NodeEnv {
 
         Stack<Node> finding = new Stack<>();
         List<Node> toRun = new Stack<>();
+        HashSet<Node> found = new HashSet<>(); // so we dont loop from parents to children
         finding.add(root);
 
         HashSet<Class<? extends Node>> registeredTypes = new HashSet<>();
@@ -45,6 +43,12 @@ public class NodeEnv {
                 if (child != null){
                     toRun.remove(child.node()); //If a node is already in the stack, move it up
                     finding.push(child.node());
+                }
+            }
+            if (!found.contains(top)){
+                for (Request parent : top.getOutputs()) {
+                    found.add(top); //we only want the parents added so we can keep the order of running correct
+                    finding.push(parent.node());
                 }
             }
         }
@@ -73,8 +77,10 @@ public class NodeEnv {
                 for (var input : node.getInputs()) { //check if input of prev node connects to the right type
                     //if Class wanted is not input class, or any, then throw an error
                     if (input != null) {
+                        //mess of if statements, but fuck it
                         if (input.node().getOutputTypes()[input.pullSlot()].getClass() != node.getInputTypes()[i].getClass()
                                 && node.getInputTypes()[i].getClass() != TypeObject.class) {
+                            //if the type was wrong, or not any, then throw an error
                             throw new NodeExecutionError("Incorrect node type found, wanted: " + node.getInputTypes()[i] +
                                     " got: " + input.node().getOutputTypes()[input.pullSlot()]);
                         }

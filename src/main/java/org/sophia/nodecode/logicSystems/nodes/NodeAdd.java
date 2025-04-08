@@ -30,6 +30,8 @@ public class NodeAdd extends Node {
 
     @Override
     public DataType<?>[] run(DataType<?>[] inputs) {
-        return new DataType<?>[]{new TypeDouble((Double) inputs[0].getData() + (Double) inputs[1].getData())};
+        Double in1 = getSlot(inputs,0);
+        Double in2 = getSlot(inputs,1);
+        return new DataType<?>[]{new TypeDouble(in1 + in2)};
     }
 }

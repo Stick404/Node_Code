@@ -31,7 +31,7 @@ public class NodePrint extends Node {
     public DataType<?>[] run(DataType<?>[] inputs) {
         DataType<?>[] data = super.run(inputs);
 
-        System.out.println(inputs[0].getData());
+        System.out.println(inputs[0].getData()); // not the best way, but works
         return data;
     }
 }

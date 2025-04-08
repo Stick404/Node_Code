@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.sophia.nodecode.logicSystems.core.Node;
 import org.sophia.nodecode.logicSystems.nodes.NodeAdd;
 import org.sophia.nodecode.logicSystems.nodes.NodeAppendList;
+import org.sophia.nodecode.logicSystems.nodes.NodeGetList;
 import org.sophia.nodecode.logicSystems.nodes.NodePrint;
 import org.sophia.nodecode.logicSystems.nodes.inputs.NodeListInput;
 import org.sophia.nodecode.logicSystems.nodes.inputs.NodeDoubleInput;
@@ -29,7 +30,8 @@ public class NodeRegistry {
     public static final DeferredHolder<Node, NodeAdd> NODE_ADD = NODES.register("node_add", () -> new NodeAdd());
 
     //Lists
-    public static final DeferredHolder<Node, NodeAppendList> NODE_ARRAY_APPEND = NODES.register("list_append", () -> new NodeAppendList());
+    public static final DeferredHolder<Node, NodeAppendList> NODE_LIST_APPEND = NODES.register("list_append", () -> new NodeAppendList());
+    public static final DeferredHolder<Node, NodeGetList> NODE_GET_LIST = NODES.register("list_get",() -> new NodeGetList());
 
     public static void init(IEventBus bus){
         NODES.register(bus);
