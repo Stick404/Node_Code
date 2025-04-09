@@ -85,7 +85,7 @@ public abstract class Node {
      * @param inputs A list of {@link DataType}s formated with either null, or {@link Node#inputTypes}
      * @return A list of {@link DataType}s formated with either null, or {@link Node#outputTypes}
      */
-    protected DataType<?>[] run(DataType<?>[] inputs) {
+    public DataType<?>[] run(DataType<?>[] inputs) {
         return new DataType[getOutputTypes().length];
     }
 

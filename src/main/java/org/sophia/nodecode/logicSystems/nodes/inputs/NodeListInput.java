@@ -15,7 +15,7 @@ public class NodeListInput extends NodeInput<ArrayList<?>>{
     }
 
     public NodeListInput(NodeEnv env, ArrayList val){
-        super(env,new TypeList(),val);
+        super();
     }
 
     public DataType<?>[] getOutputTypes() {

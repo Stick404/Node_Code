@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.sophia.nodecode.registries.process.NodeProcess;
 
 public class TestingItem extends Item {
     private static BlockPos pos = new BlockPos(0,0,0);
@@ -18,7 +19,7 @@ public class TestingItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        try{
+        /*try{
             if (level instanceof ServerLevel z){
                 LevelChunk chunk = new LevelChunk(z, new ChunkPos(pos));
                 System.out.println(chunk.getBlockState(BlockPos.containing(player.getEyePosition())));
@@ -27,6 +28,8 @@ public class TestingItem extends Item {
         } catch (Exception e) {
             System.out.println(e);
         }
+         */
+        NodeProcess.NodeInit("testing");
         return InteractionResult.SUCCESS;
     }
 }

@@ -10,9 +10,15 @@ import org.sophia.nodecode.logicSystems.nodes.inputs.NodeDoubleInput;
 import org.sophia.nodecode.logicSystems.nodes.inputs.NodeStringInput;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentMap;
+
+import static org.sophia.nodecode.registries.CustomRegistries.NODE_REGISTRY;
+import static org.sophia.nodecode.registries.process.NodeProcess.KNOWN_NODES;
 
 public class Testing {
     public static void testing() {
+        System.out.println(KNOWN_NODES);
+
         System.out.println("Starting run!");
 
         NodeEnv env = new NodeEnv(); //start a new environment

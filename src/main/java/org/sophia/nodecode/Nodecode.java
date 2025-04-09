@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import org.sophia.nodecode.registries.*;
+import org.sophia.nodecode.registries.process.NodeProcess;
 import org.sophia.nodecode.rendering.NodeLevelRendering;
 import org.sophia.nodecode.save.ClientNodeCollection;
 
@@ -59,6 +60,8 @@ public class Nodecode {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        NodeProcess.NodeInit("common");
+
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
 
