@@ -13,8 +13,8 @@ public abstract class Node {
     public ArrayList<Request> outputs; //the children this node knows
     public UUID uuid; //UUID of the node
 
-    public final static DataType[] inputTypes = new DataType[]{};
-    public final static DataType[] outputTypes = new DataType[]{};
+    public final static DataType<?>[] inputTypes = new DataType[]{};
+    public final static DataType<?>[] outputTypes = new DataType[]{};
 
     public Node(){
     }
@@ -27,11 +27,11 @@ public abstract class Node {
         env.nodes.put(this.uuid,this);
     }
 
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return inputTypes;
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 
@@ -56,8 +56,7 @@ public abstract class Node {
 
     //Returns an array of outputs
     protected DataType<?>[] run(DataType<?>[] inputs) {
-        DataType<?>[] outputs = new DataType[getOutputTypes().length];
-        return outputs;
+        return new DataType[getOutputTypes().length];
     }
 
     public Request[] getInputs() {

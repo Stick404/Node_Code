@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_LIST;
 
-public class NodeListInput extends NodeInput<ArrayList>{
-    public final static DataType[] outputTypes = new DataType[]{TYPE_LIST.get()};
+public class NodeListInput extends NodeInput<ArrayList<?>>{
+    public final static DataType<?>[] outputTypes = new DataType[]{TYPE_LIST.get()};
     public NodeListInput(){
         super();
     }
@@ -18,7 +18,7 @@ public class NodeListInput extends NodeInput<ArrayList>{
         super(env,new TypeList(),val);
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 }

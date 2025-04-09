@@ -38,11 +38,11 @@ public class NodeAppendList extends Node {
         super(env);
     }
 
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return inputTypes;
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 }

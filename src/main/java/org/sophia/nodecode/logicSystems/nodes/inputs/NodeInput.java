@@ -20,7 +20,7 @@ public abstract class NodeInput<T> extends Node {
         this.value = value;
     }
 
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return new DataType[0];
     }
 

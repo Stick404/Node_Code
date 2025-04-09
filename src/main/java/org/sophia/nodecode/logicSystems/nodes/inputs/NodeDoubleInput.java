@@ -7,7 +7,7 @@ import org.sophia.nodecode.logicSystems.types.TypeDouble;
 import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_DOUBLE;
 
 public class NodeDoubleInput extends NodeInput<Double>{
-    public final static DataType[] outputTypes = new DataType[]{TYPE_DOUBLE.get()};
+    public final static DataType<?>[] outputTypes = new DataType[]{TYPE_DOUBLE.get()};
 
     public NodeDoubleInput(){
         super();
@@ -17,7 +17,7 @@ public class NodeDoubleInput extends NodeInput<Double>{
         super(env,new TypeDouble(),val);
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 }

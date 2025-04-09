@@ -9,8 +9,8 @@ import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_DOUBLE;
 
 public class NodeAdd extends Node {
 
-    public final static DataType[] inputTypes = new DataType[]{TYPE_DOUBLE.get(),TYPE_DOUBLE.get()};
-    public final static DataType[] outputTypes = new DataType[]{TYPE_DOUBLE.get()};
+    public final static DataType<?>[] inputTypes = new DataType[]{TYPE_DOUBLE.get(),TYPE_DOUBLE.get()};
+    public final static DataType<?>[] outputTypes = new DataType[]{TYPE_DOUBLE.get()};
 
     public NodeAdd() {
         super();
@@ -20,11 +20,11 @@ public class NodeAdd extends Node {
         super(env);
     }
 
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return inputTypes;
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 

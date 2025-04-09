@@ -8,8 +8,8 @@ import static org.sophia.nodecode.registries.DataTypeRegistry.TYPE_ANY;
 
 public class NodePrint extends Node {
 
-    public final static DataType[] inputTypes = new DataType[]{TYPE_ANY.get()};
-    public final static DataType[] outputTypes = new DataType[]{};
+    public final static DataType<?>[] inputTypes = new DataType[]{TYPE_ANY.get()};
+    public final static DataType<?>[] outputTypes = new DataType[]{};
 
     public NodePrint() {
         super();
@@ -19,11 +19,11 @@ public class NodePrint extends Node {
         super(env);
     }
 
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return inputTypes;
     }
 
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 

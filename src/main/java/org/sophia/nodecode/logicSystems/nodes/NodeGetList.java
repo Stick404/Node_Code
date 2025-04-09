@@ -28,12 +28,12 @@ public class NodeGetList extends Node {
     }
 
     @Override
-    public DataType[] getInputTypes() {
+    public DataType<?>[] getInputTypes() {
         return inputTypes;
     }
 
     @Override
-    public DataType[] getOutputTypes() {
+    public DataType<?>[] getOutputTypes() {
         return outputTypes;
     }
 
