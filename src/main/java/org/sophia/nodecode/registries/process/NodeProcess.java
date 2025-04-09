@@ -23,10 +23,5 @@ public class NodeProcess {
         for (var entry : NODE_REGISTRY.entrySet()){
             KNOWN_NODES.put(entry.getKey().location(), entry.getValue());
         }
-
-        //TESTING AREA BELOW
-        var e = ID("node_add");
-        System.out.println("NAME!!");
-        System.out.println(KNOWN_NODES.get(e).getClass().getName());
     }
 }

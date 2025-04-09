@@ -33,7 +33,7 @@ public abstract class Node {
         this.uuid = UUID.randomUUID();
         this.inputs = new Request[getInputTypes().length];
         this.outputs = new ArrayList<>();
-        env.nodes.put(this.uuid,this);
+        env.put(this);
     }
 
     /**

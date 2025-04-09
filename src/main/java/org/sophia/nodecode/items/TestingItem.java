@@ -6,10 +6,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.LevelChunk;
-import org.sophia.nodecode.registries.process.NodeProcess;
+
+import static org.sophia.nodecode.Utils.ID;
+import static org.sophia.nodecode.registries.process.NodeProcess.KNOWN_NODES;
 
 public class TestingItem extends Item {
     private static BlockPos pos = new BlockPos(0,0,0);
@@ -29,7 +29,11 @@ public class TestingItem extends Item {
             System.out.println(e);
         }
          */
-        NodeProcess.NodeInit("testing");
+        if (level instanceof ServerLevel z){
+            var e = ID("node_add");
+            System.out.println("NAME!!");
+            System.out.println(KNOWN_NODES.get(e).getClass().getName());
+        }
         return InteractionResult.SUCCESS;
     }
 }

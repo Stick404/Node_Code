@@ -18,6 +18,10 @@ public class NodeEnv {
         nodes = new HashMap<>();
     }
 
+    public void put(Node node){
+        nodes.put(UUID.randomUUID(), node);
+    }
+
     //prepares the NodeEnv to be ran or saving
     public Stack<? extends Node> read() {
         if (this.root == null){
@@ -90,7 +94,7 @@ public class NodeEnv {
                     }
                     i++;
                 }
-                DataType<?>[] output = null;
+                DataType<?>[] output;
                 try {
                     output = node.run(inputs);
                 } catch (NullPointerException e) {
