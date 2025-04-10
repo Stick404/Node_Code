@@ -5,9 +5,6 @@ import org.sophia.nodecode.logicSystems.Funcs.FuncAdd;
 import org.sophia.nodecode.logicSystems.types.TypeNull;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 /**
  * The abstract Func, all Func subclasses extend from this root. See {@link FuncAdd} for an example of a basic Func
  */

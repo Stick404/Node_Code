@@ -32,10 +32,8 @@ public class NodeEnv {
 
         Stack<Node> finding = new Stack<>();
         Stack<Node> toRun = new Stack<>();
-        HashSet<Node> found = new HashSet<>();
         finding.add(root);
 
-        //TODO: Optimize this! Its shit right now
         while (!finding.empty()){
             var top = finding.pop();
 
@@ -46,9 +44,9 @@ public class NodeEnv {
                     finding.push(nodes.get(child.source()));
                 }
             }
-            if (!found.contains(top)){
+            if (!toRun.contains(top)){
                 for (Request parent : top.outputs) {
-                    found.add(top); //we only want the parents added so we can keep the order of running correct
+                    //we only want the parents added so we can keep the order of running correct
                     finding.push(nodes.get(parent.target()));
                 }
             }
@@ -65,14 +63,14 @@ public class NodeEnv {
         return read();
     }
 
-    //actually runs the NodeEnv
-    public void setRoot(Node node){
-        this.root = node;
-    }
     public void setRoot(UUID node){
         this.root = nodes.get(node);
     }
 
+    /**
+     * Runs the node env. Requires a Root Node to be set fist. <br>
+     * Also calls {@link NodeEnv#read()} if {@link NodeEnv#toRun} is null
+     */
     public void run(){
         try {
             if (toRun == null) {read();}
@@ -86,9 +84,8 @@ public class NodeEnv {
                         //if Class wanted is not input class, or any, then throw an error
                         if (request != null) {
                             //mess of if statements, but fuck it
-
                             //What this is doing: is output type same as input type? If not, error
-                            if (nodes.get(request.target()).outputTypes[request.targetSlot()].getClass() != node.inputTypes[request.pullSlot()].getClass()
+                            if (this.nodes.get(request.source()).outputTypes[request.pullSlot()].getClass() != node.inputTypes[i].getClass()
                                     && node.inputTypes[request.targetSlot()].getClass() != TypeObject.class) {
                                 throw new NodeExecutionError("Incorrect node type found, wanted: " + node.inputTypes[request.pullSlot()] +
                                         " got: " + nodes.get(request.source()).outputTypes[request.pullSlot()]);
@@ -110,7 +107,6 @@ public class NodeEnv {
                 }
                 if (output.length > 0 && output[0] != null) {
                     outputs.put(node.uuid, output);
-                    System.out.println(output[0].getData());
                 }
             }
         } catch (RuntimeException e) {
@@ -124,10 +120,10 @@ public class NodeEnv {
      * @param nodeRL The {@link ResourceLocation} (EG: "nodecode:node_add") of the node to run
      * @return The Node created
      */
-    public Node createNode(ResourceLocation nodeRL){
+    public UUID createNode(ResourceLocation nodeRL){
         Node link = new Node(nodeRL);
         this.nodes.put(link.uuid,link);
-        return link;
+        return link.uuid;
     }
 
     /**
@@ -135,11 +131,11 @@ public class NodeEnv {
      * @param extra The Extra data a Node might need to be run (EG: Input nodes and default values)
      * @return The Node created
      */
-    public Node createNode(ResourceLocation nodeRL, DataType<?> extra){
+    public UUID createNode(ResourceLocation nodeRL, DataType<?> extra){
         Node link = new Node(nodeRL);
         link.extra = extra;
         this.nodes.put(link.uuid,link);
-        return link;
+        return link.uuid;
     }
 
     /** Sets a connection between nodes
@@ -210,12 +206,12 @@ public class NodeEnv {
          */
         protected Node(ResourceLocation nodeRL) {
             Func nodeC = KNOWN_NODES.get(nodeRL);
-            this.function = nodeRL;
-            inputTypes = nodeC.getInputTypes();
-            outputTypes = nodeC.getOutputTypes();
-            inputs = new Request[nodeC.getInputTypes().length];
-            outputs = new ArrayList<>();
-            uuid = UUID.randomUUID();
+             this.function = nodeRL;
+            this.inputTypes = nodeC.getInputTypes();
+            this.outputTypes = nodeC.getOutputTypes();
+            this.inputs = new Request[nodeC.getInputTypes().length];
+            this.outputs = new ArrayList<>();
+            this.uuid = UUID.randomUUID();
         }
     }
 }

@@ -13,7 +13,6 @@ import org.sophia.nodecode.logicSystems.types.TypeList;
 import org.sophia.nodecode.logicSystems.types.TypeString;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.sophia.nodecode.Nodecode.MODID;
 import static org.sophia.nodecode.registries.CustomRegistries.NODE_REGISTRY;

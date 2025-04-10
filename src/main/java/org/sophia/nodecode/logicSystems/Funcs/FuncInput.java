@@ -6,17 +6,19 @@ import org.sophia.nodecode.logicSystems.core.Func;
 
 public class FuncInput<T> implements Func {
     private final DataType<T> type;
-    private final T value;
-    public static final DataType<?>[] outputTypes = new DataType[1];
+    public final DataType<?>[] outputTypes;
 
     public FuncInput(DataType<T> type) { //The init value to use
         this.type = type;
-        this.value = type.getData();
-        outputTypes[0] = type;
+        this.outputTypes = new DataType<?>[]{type};
     }
 
     public DataType<?>[] getInputTypes() {
         return new DataType[0];
+    }
+
+    public DataType<?>[] getOutputTypes() {
+        return outputTypes;
     }
 
     public DataType<?>[] run(DataType<?>[] inputs, @Nullable DataType<?> extra) {
