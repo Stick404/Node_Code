@@ -9,7 +9,7 @@ import org.sophia.nodecode.save.ClientNodeCollection;
 
 import static org.sophia.nodecode.Utils.ID;
 
-public final class NodeLevelRendering {
+public final class PlaneLevelRendering {
     public static void render(RenderLevelStageEvent event){
         var collection = ClientNodeCollection.get();
         if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER && !collection.getNodeLocations().isEmpty()){

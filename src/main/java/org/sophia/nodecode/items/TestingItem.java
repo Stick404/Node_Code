@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import org.sophia.nodecode.logicSystems.Testing;
 
 import static org.sophia.nodecode.Utils.ID;
 import static org.sophia.nodecode.registries.process.NodeProcess.KNOWN_NODES;
@@ -19,16 +20,12 @@ public class TestingItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        /*try{
-            if (level instanceof ServerLevel z){
-                LevelChunk chunk = new LevelChunk(z, new ChunkPos(pos));
-                System.out.println(chunk.getBlockState(BlockPos.containing(player.getEyePosition())));
-            }
-            //Testing.testing();
+        try{
+            Testing.testing();
         } catch (Exception e) {
             System.out.println(e);
         }
-         */
+
         if (level instanceof ServerLevel z){
             var e = ID("node_add");
             System.out.println("NAME!!");

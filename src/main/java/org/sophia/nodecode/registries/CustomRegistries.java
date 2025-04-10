@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.sophia.nodecode.logicSystems.core.DataType;
-import org.sophia.nodecode.logicSystems.core.Node;
+import org.sophia.nodecode.logicSystems.core.Func;
 
 import static net.neoforged.fml.common.EventBusSubscriber.Bus.MOD;
 import static org.sophia.nodecode.Nodecode.MODID;
@@ -21,8 +21,8 @@ public class CustomRegistries {
             .sync(true)
             .create();
 
-    public static final ResourceKey<Registry<Node>> NODE_KEY = ResourceKey.createRegistryKey(ID("nodes"));
-    public static final Registry<Node> NODE_REGISTRY = new RegistryBuilder<>(NODE_KEY)
+    public static final ResourceKey<Registry<Func>> NODE_KEY = ResourceKey.createRegistryKey(ID("nodes"));
+    public static final Registry<Func> NODE_REGISTRY = new RegistryBuilder<>(NODE_KEY)
             .sync(true)
             .create();
 

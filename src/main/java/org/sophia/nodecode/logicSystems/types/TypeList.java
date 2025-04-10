@@ -4,9 +4,10 @@ import org.sophia.nodecode.logicSystems.core.DataType;
 
 import java.util.*;
 
-public class TypeList extends DataType<ArrayList> {
-    public TypeList(ArrayList<?> initVal) {
-        super(ArrayList.class, initVal);
+public class TypeList extends DataType<ArrayList<DataType<?>>> {
+    //mmmm, casting
+    public TypeList(ArrayList<DataType<?>> initVal) {
+        super((Class<ArrayList<DataType<?>>>) new ArrayList<DataType<?>>().getClass(), initVal);
     }
 
     public TypeList(){
@@ -19,7 +20,7 @@ public class TypeList extends DataType<ArrayList> {
     }
 
     @Override
-    public ArrayList getData() {
-        return (ArrayList) super.getData().clone();
+    public ArrayList<DataType<?>> getData() {
+        return (ArrayList<DataType<?>>) super.getData().clone();
     }
 }

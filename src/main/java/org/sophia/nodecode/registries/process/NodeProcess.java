@@ -1,19 +1,17 @@
 package org.sophia.nodecode.registries.process;
 
 import net.minecraft.resources.ResourceLocation;
-import org.sophia.nodecode.logicSystems.core.Node;
-import org.sophia.nodecode.logicSystems.nodes.NodeAdd;
+import org.sophia.nodecode.logicSystems.core.Func;
 
 import java.util.HashMap;
 
-import static org.sophia.nodecode.Utils.ID;
 import static org.sophia.nodecode.registries.CustomRegistries.NODE_REGISTRY;
 
 /**
  * Converts what has been Registered in NodeRegistry into functional nodes
  */
 public class NodeProcess {
-    public static final HashMap<ResourceLocation, Node> KNOWN_NODES = new HashMap<>();
+    public static final HashMap<ResourceLocation, Func> KNOWN_NODES = new HashMap<>();
 
     /**
      * Called then initiating the Nodes during start up. Should be called on the Client and Server

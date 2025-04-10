@@ -26,7 +26,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import org.sophia.nodecode.registries.*;
 import org.sophia.nodecode.registries.process.NodeProcess;
-import org.sophia.nodecode.rendering.NodeLevelRendering;
+import org.sophia.nodecode.rendering.PlaneLevelRendering;
 import org.sophia.nodecode.save.ClientNodeCollection;
 
 import static org.sophia.nodecode.registries.BlockRegistry.NODE_ROOT_BLOCK_ITEM;
@@ -101,7 +101,7 @@ public class Nodecode {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
-            NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, NodeLevelRendering::render);
+            NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, PlaneLevelRendering::render);
 
             NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,LevelEvent.Load.class, (x) ->{
                 ClientNodeCollection.get().clearTodo();
