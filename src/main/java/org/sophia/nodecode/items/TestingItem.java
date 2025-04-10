@@ -20,16 +20,12 @@ public class TestingItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        try{
-            Testing.testing();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
         if (level instanceof ServerLevel z){
-            var e = ID("node_add");
-            System.out.println("NAME!!");
-            System.out.println(KNOWN_NODES.get(e).getClass().getName());
+            try{
+                Testing.testing();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         return InteractionResult.SUCCESS;
     }

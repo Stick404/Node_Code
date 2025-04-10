@@ -1,6 +1,8 @@
 package org.sophia.nodecode.logicSystems.core;
 
 import net.minecraft.resources.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sophia.nodecode.logicSystems.types.TypeNull;
 import org.sophia.nodecode.logicSystems.types.TypeObject;
 
@@ -9,6 +11,7 @@ import java.util.*;
 import static org.sophia.nodecode.registries.process.NodeProcess.KNOWN_NODES;
 
 public class NodeEnv {
+    private static final Logger log = LogManager.getLogger(NodeEnv.class);
     public Node root; // Root is the last node in the graph
     public HashMap<UUID, Node> nodes; // All known nodes
     public Stack<Node> toRun; // The order to run all nodes
@@ -28,24 +31,25 @@ public class NodeEnv {
         }
 
         Stack<Node> finding = new Stack<>();
-        List<Node> toRun = new Stack<>();
+        Stack<Node> toRun = new Stack<>();
         HashSet<Node> found = new HashSet<>();
         finding.add(root);
 
+        //TODO: Optimize this! Its shit right now
         while (!finding.empty()){
             var top = finding.pop();
 
             toRun.add(top);
             for (Request child : top.inputs){
                 if (child != null){
-                    toRun.remove(nodes.get(child.target())); //If a node is already in the stack, move it up
-                    finding.push(nodes.get(child.target()));
+                    toRun.remove(nodes.get(child.source())); //If a node is already in the stack, move it up
+                    finding.push(nodes.get(child.source()));
                 }
             }
             if (!found.contains(top)){
                 for (Request parent : top.outputs) {
                     found.add(top); //we only want the parents added so we can keep the order of running correct
-                    finding.push(nodes.get(parent.source()));
+                    finding.push(nodes.get(parent.target()));
                 }
             }
         }
@@ -62,6 +66,13 @@ public class NodeEnv {
     }
 
     //actually runs the NodeEnv
+    public void setRoot(Node node){
+        this.root = node;
+    }
+    public void setRoot(UUID node){
+        this.root = nodes.get(node);
+    }
+
     public void run(){
         try {
             if (toRun == null) {read();}
@@ -69,23 +80,25 @@ public class NodeEnv {
 
                 DataType<?>[] inputs = new DataType[node.inputs.length];
                 int i = 0;
-
                 //do type checking here
-                for (Request input : node.inputs) { //check if input of prev node connects to the right type
-                    //if Class wanted is not input class, or any, then throw an error
-                    if (input != null) {
-                        //mess of if statements, but fuck it
-                        if (nodes.get(input.source()).outputTypes[input.pullSlot()].getClass() != node.inputTypes[i].getClass()
-                                && node.inputTypes[i].getClass() != TypeObject.class) {
-                            //if the type was wrong, or not any, then throw an error
-                            throw new NodeExecutionError("Incorrect node type found, wanted: " + node.inputTypes[i] +
-                                    " got: " + nodes.get(input.source()).outputTypes[input.pullSlot()]);
+                if (node.inputs.length > 0){
+                    for (Request request : node.inputs) { //check if input of prev node connects to the right type
+                        //if Class wanted is not input class, or any, then throw an error
+                        if (request != null) {
+                            //mess of if statements, but fuck it
+
+                            //What this is doing: is output type same as input type? If not, error
+                            if (nodes.get(request.target()).outputTypes[request.targetSlot()].getClass() != node.inputTypes[request.pullSlot()].getClass()
+                                    && node.inputTypes[request.targetSlot()].getClass() != TypeObject.class) {
+                                throw new NodeExecutionError("Incorrect node type found, wanted: " + node.inputTypes[request.pullSlot()] +
+                                        " got: " + nodes.get(request.source()).outputTypes[request.pullSlot()]);
+                            }
+                            inputs[i] = this.outputs.get(request.source())[request.pullSlot()];
+                        } else {
+                            inputs[i] = new TypeNull(); //in case there is no input, make it null
                         }
-                        inputs[i] = this.outputs.get(input.source())[input.pullSlot()];
-                    } else {
-                        inputs[i] = new TypeNull(); //in case there is no input, make it null
+                        i++;
                     }
-                    i++;
                 }
                 DataType<?>[] output;
                 //Runs the node!
@@ -97,11 +110,11 @@ public class NodeEnv {
                 }
                 if (output.length > 0 && output[0] != null) {
                     outputs.put(node.uuid, output);
-                    //System.out.println(output[0].getData());
+                    System.out.println(output[0].getData());
                 }
             }
         } catch (RuntimeException e) {
-            System.out.println(e); //Handle the error :clueless:
+            log.error("e: ", e); //Handle the error :clueless:
         }
         outputs.clear(); //so you cant read the old data of nodes
     }
@@ -137,7 +150,7 @@ public class NodeEnv {
         var parent = nodes.get(link);
         var child = nodes.get(request.source());
         parent.inputs[request.targetSlot()] = request;
-        child.outputs.set(request.pullSlot(), request);
+        child.outputs.add(request);
     }
 
     /** Sets a connection between nodes
@@ -157,7 +170,7 @@ public class NodeEnv {
         var parent = nodes.get(request.target()); //gets the parent link
 
         parent.inputs[request.targetSlot()] = null;
-        child.outputs.set(slot, null);
+        child.outputs.remove(request);
     }
 
     /** Disconnects 2 nodes
@@ -167,7 +180,7 @@ public class NodeEnv {
         var child = nodes.get(request.source());
         var parent = nodes.get(request.target());
 
-        child.outputs.set(request.pullSlot(), null);
+        child.outputs.remove(request);
         parent.inputs[request.targetSlot()] = null;
     }
 
@@ -184,13 +197,13 @@ public class NodeEnv {
      *</ul>
      *
      */
-    public class Node {
+    public static class Node {
         final ResourceLocation function; //the function/node to run
         Request[] inputs; //the input requests
         List<Request> outputs; //the output requests
         DataType<?> extra;
-        final DataType<?>[] inputTypes, outputTypes;
-        final UUID uuid; //the UUID of the link
+        public final DataType<?>[] inputTypes, outputTypes;
+        public final UUID uuid; //the UUID of the link
 
         /**
          * @param nodeRL The {@link ResourceLocation} (EG: "nodecode:node_add") of the node to run
