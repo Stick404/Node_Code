@@ -143,6 +143,8 @@ public class NodeEnv {
      * @param request The request stating where to output from, and what slots to target
      */
     public void connect(UUID link, Request request){
+        if (!this.nodes.containsKey(request.source()) && !this.nodes.containsKey(request.target())) throw new NodeExecutionError("Node was not found in NodeEnv!");
+
         var parent = nodes.get(link);
         var child = nodes.get(request.source());
         parent.inputs[request.targetSlot()] = request;
