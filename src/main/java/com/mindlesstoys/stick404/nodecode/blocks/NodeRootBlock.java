@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.blocks;
 
+import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +45,7 @@ public class NodeRootBlock extends BaseEntityBlock {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (level.getBlockEntity(pos) instanceof NodeRootEntity entity){
             if (level instanceof ServerLevel serverLevel) {
-                var data = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
+                var data = ServerNodeCollection.getInstance(serverLevel);
                 data.createNodeLocation(entity.getUuid(), pos,state.getValue(FACING));
                 data.setDirty();
             }

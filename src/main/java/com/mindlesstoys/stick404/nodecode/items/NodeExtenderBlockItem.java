@@ -22,7 +22,7 @@ public class NodeExtenderBlockItem extends BlockItem {
     @Override
     protected boolean canPlace(BlockPlaceContext context, BlockState state) {
         if (context.getLevel() instanceof ServerLevel level){
-            ServerNodeCollection collection = level.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
+            ServerNodeCollection collection = ServerNodeCollection.getInstance(level);
             BlockPos pos = context.getClickedPos();
             BlockPos target = pos.subtract(context.getClickedFace().getUnitVec3i());
 

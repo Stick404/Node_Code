@@ -1,13 +1,12 @@
 package com.mindlesstoys.stick404.nodecode.blocks;
 
+import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import static com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection.factory;
 
 public class NodeExtender extends Block {
     public NodeExtender(Properties p_49795_) {
@@ -18,7 +17,7 @@ public class NodeExtender extends Block {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if(level instanceof ServerLevel serverLevel){
-            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
+            var nodeCollection = ServerNodeCollection.getInstance(serverLevel);
             nodeCollection.tryAddExtension(pos);
         }
     }
@@ -26,7 +25,7 @@ public class NodeExtender extends Block {
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         if (level instanceof ServerLevel serverLevel) {
-            var nodeCollection = serverLevel.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection");
+            var nodeCollection = ServerNodeCollection.getInstance(serverLevel);
             nodeCollection.removeExtension(pos);
         }
         super.destroy(level, pos, state);

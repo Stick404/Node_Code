@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode;
 
+import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -82,14 +83,14 @@ public class Nodecode {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
-        event.getServer().getAllLevels().forEach((z) -> z.getDataStorage().computeIfAbsent(factory,"ServerNodeCollection"));
+        event.getServer().getAllLevels().forEach(ServerNodeCollection::getInstance);
 
         NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,EntityJoinLevelEvent.class,
                 (entityJoinEvent)-> {
                     if (entityJoinEvent.getEntity().getType() == EntityType.PLAYER) {
                         if (entityJoinEvent.getLevel() instanceof ServerLevel level) {
                             System.out.println("UPDATEING PLAYERS");
-                            level.getDataStorage().get(factory, "ServerNodeCollection").updatePlayers(false);
+                            ServerNodeCollection.getInstance(level).updatePlayers(false);
                         }
                     }
                 });

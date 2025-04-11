@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level;
 import com.mindlesstoys.stick404.nodecode.logicSystems.Testing;
 
 public class TestingItem extends Item {
-    private static BlockPos pos = new BlockPos(0,0,0);
     public TestingItem(Properties properties) {
         super(properties);
     }

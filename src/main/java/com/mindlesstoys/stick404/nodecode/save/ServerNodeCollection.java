@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,8 @@ import static com.mindlesstoys.stick404.nodecode.Nodecode.LOGGER;
 /**
  * This class handles *all* if the Node Arrays/{@link ServerNodeStorage},and is the server counterpart to {@link ClientNodeCollection}.
  */
+//TODO: Make a NodeCollection interface
+//TODO: Make a NodeStorage interface
 public class ServerNodeCollection extends SavedData {
     public static Factory<ServerNodeCollection> factory = new Factory<>(ServerNodeCollection::create, ServerNodeCollection::load);
     HashSet<BlockPos> extensions = new HashSet<>();
@@ -24,6 +27,10 @@ public class ServerNodeCollection extends SavedData {
     HashMap<UUID, ServerNodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
     //TODO: Make the blocks look different if they are in the global extensions
+
+    public static ServerNodeCollection getInstance(ServerLevel level){
+        return level.getDataStorage().computeIfAbsent(factory,"server_node_collection");
+    }
 
     public static ServerNodeCollection create() {
         return new ServerNodeCollection();
@@ -158,6 +165,10 @@ public class ServerNodeCollection extends SavedData {
         }
         compoundTag.put("storages",tag);
         return compoundTag;
+    }
+
+    public HashMap<UUID, ServerNodeStorage> getNodeLocations() {
+        return nodeLocations;
     }
 
     /** Updates the place's local list of NodeCollections ({@link ClientNodeCollection}), boolean states if this update should clear the old list of known Collections

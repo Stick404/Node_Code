@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import java.util.HashMap;
 import java.util.UUID;
 
+//TODO: Make a NodeCollection interface
+//TODO: Make a NodeStorage interface
 public class ClientNodeCollection {
     //Rather than using `SavedData`, this is just a singleton.
     //This is so rendering code and Client Items can refer to a global list
