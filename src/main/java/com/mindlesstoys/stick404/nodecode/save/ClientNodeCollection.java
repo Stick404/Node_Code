@@ -15,6 +15,9 @@ public class ClientNodeCollection {
     private ClientNodeCollection(){
     }
 
+    /**
+     * @return The singleton of {@link ClientNodeCollection}
+     */
     public static ClientNodeCollection get(){
         if (INSTANCE == null){
             return INSTANCE = new ClientNodeCollection();
@@ -22,6 +25,9 @@ public class ClientNodeCollection {
         return INSTANCE;
     }
 
+    /**
+     * Clears the {@link ClientNodeCollection#nodeLocations}, and resets {@link ClientNodeCollection#shouldClear} to true
+     */
     public void clearTodo(){
         if (!shouldClear) {
             shouldClear = true;
@@ -30,6 +36,9 @@ public class ClientNodeCollection {
         nodeLocations.clear();
     }
 
+    /**
+     * @param shouldClear a boolean of if the next {@link ClientNodeCollection#clearTodo()} should clear it or not
+     */
     public void setShouldClear(boolean shouldClear) {
         this.shouldClear = shouldClear;
     }

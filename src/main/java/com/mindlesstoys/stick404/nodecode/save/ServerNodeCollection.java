@@ -14,13 +14,16 @@ import java.util.List;
 import java.util.UUID;
 import static com.mindlesstoys.stick404.nodecode.Nodecode.LOGGER;
 
+/**
+ * This class handles *all* if the Node Arrays/{@link ServerNodeStorage},and is the server counterpart to {@link ClientNodeCollection}.
+ */
 public class ServerNodeCollection extends SavedData {
     public static Factory<ServerNodeCollection> factory = new Factory<>(ServerNodeCollection::create, ServerNodeCollection::load);
     HashSet<BlockPos> extensions = new HashSet<>();
     //Store all known blocks
     HashMap<UUID, ServerNodeStorage> nodeLocations = new HashMap<>();
     //store all known "Node Sets"
-    //TODO: Make the blocks look different if they are in the global extensions (networking :weedhexxy:)
+    //TODO: Make the blocks look different if they are in the global extensions
 
     public static ServerNodeCollection create() {
         return new ServerNodeCollection();
@@ -30,7 +33,6 @@ public class ServerNodeCollection extends SavedData {
         ServerNodeStorage storage = new ServerNodeStorage(uuid,pos,dir);
         nodeLocations.put(uuid,storage);
         extensions.add(pos);
-        LOGGER.info("making new Location!");
         this.setDirty();
     }
 
@@ -65,6 +67,11 @@ public class ServerNodeCollection extends SavedData {
     }
 
     //returns the BlockPos that it connects too, else returns null
+
+    /**
+     * @param pos A BlockPos in the world
+     * @return A BlockPos that is connected to the global HashSet of pos ({@link ServerNodeCollection#extensions})
+     */
     public @Nullable BlockPos tryExtension(BlockPos pos){
         //TODO: Check if block is valid on multiple sides. If so, do something
         BlockPos[] adjacents = {pos.north(),pos.south(),pos.east(),pos.west(),pos.above(),pos.below()};
@@ -76,6 +83,11 @@ public class ServerNodeCollection extends SavedData {
         return null;
     }
 
+    /** Attempts to add a pos to a {@link ServerNodeStorage}, calls {@link ServerNodeCollection}
+     *
+     * @param pos The block to try to add
+     * @return A boolean that states if it could add the block
+     */
     public boolean tryAddExtension(BlockPos pos){
         //TODO: Check if block is valid on multiple sides. If so, do something
         BlockPos x = tryExtension(pos);
@@ -92,6 +104,12 @@ public class ServerNodeCollection extends SavedData {
         }
         return false;
     }
+
+    /**
+     *  The exact same as {@link ServerNodeCollection#tryAddExtension(BlockPos)} except it just returns if it can, rather than adding
+     * @param pos The block to try to add
+     * @return A boolean that states if it could add the block
+     */
     public boolean testAddExtension(BlockPos pos){
         //TODO: Check if block is valid on multiple sides. If so, do something
         BlockPos x = tryExtension(pos);
@@ -142,6 +160,9 @@ public class ServerNodeCollection extends SavedData {
         return compoundTag;
     }
 
+    /** Updates the place's local list of NodeCollections ({@link ClientNodeCollection}), boolean states if this update should clear the old list of known Collections
+     * @param shouldClear
+     */
     public void updatePlayers(boolean shouldClear){
         this.nodeLocations.forEach((z,x) -> x.updateClients(shouldClear));
     }
