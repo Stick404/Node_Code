@@ -14,13 +14,23 @@ This will be done by building {TODO: Change the name} "Node Arrays," a 3-dimensi
     - Redstone reading
     - Block Reading (Chest, furnace, etc)
     - Type Reading (minecraft:dirt, minecraft:cobblestone)
+    - World Reading (weather, time, moon phase, etc)
+    - Array Reading (size of array, where it is, is position in range, etc)
+    - Fluid Reader
+    - Energy Reader
   - Writer Blocks
+    - Fluid Mover
+    - Energy Mover
     - Break Block
     - Place Block
     - Move Items
     - Use Item
     - Move Block(?)
-- Add more Nodes!
+    - Redstone output
+- Add more DataTypes!
+  - Fluid
+  - Energy
+  - Item Stacks 
   - Block Types
   - Block Positions
   - Entities
