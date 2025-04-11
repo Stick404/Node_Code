@@ -1,5 +1,6 @@
 # NODE CODE!
 This is an extremely WIP Minecraft mod that will be adding in Node Based coding into Minecraft for automation.
+This will be done by building {TODO: Change the name} "Node Arrays," a 3-dimensional structure {TODO: Add a pictures}. Then, after they are built, there will be blue planes you can arrange and code nodes. 
 
 ## Big things to do!
 - Implement a UI into Node Planes
