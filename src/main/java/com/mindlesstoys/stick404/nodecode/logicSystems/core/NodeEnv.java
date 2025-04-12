@@ -26,6 +26,9 @@ public class NodeEnv {
         toRun = new Stack<>();
     }
 
+    /** Creates a new NodeEnv via a {@link CompoundTag}
+     * @param tag A {@link CompoundTag} to read into a new NodeEnv
+     */
     public NodeEnv(CompoundTag tag){
         this.outputs = new HashMap<>();
         this.nodes = new HashMap<>();
@@ -215,6 +218,9 @@ public class NodeEnv {
         parent.inputs[request.targetSlot()] = null;
     }
 
+    /** Converts the NodeEnv into a CompoundTag
+     * @return A {@link CompoundTag} representing the NodeEnv
+     */
     public CompoundTag save(){
         CompoundTag tag = new CompoundTag();
 
@@ -271,6 +277,9 @@ public class NodeEnv {
             this.uuid = UUID.randomUUID();
         }
 
+        /** Creates a new Node via a {@link CompoundTag}
+         * @param tag A {@link CompoundTag} to read into a new Node
+         */
         protected Node(CompoundTag tag){
             this.function = ResourceLocation.parse(tag.getString("function"));
             Func nodeC = KNOWN_NODES.get(function);
@@ -295,6 +304,9 @@ public class NodeEnv {
             if (tag.contains("extra")) this.extra = DataType.load(tag.getCompound("extra"));
         }
 
+        /** Converts the Node into a CompoundTag
+         * @return A {@link CompoundTag} representing the Node
+         */
         protected CompoundTag save(){
             CompoundTag tag = new CompoundTag();
             tag.putString("function",function.toString());
