@@ -36,14 +36,14 @@ public class ServerNodeStorage {
 
     //made for ServerNodeStorage#fromTag
     //returns a fully made ServerNodeStorage
-    private ServerNodeStorage(UUID uuid, BlockPos centerBlock, HashSet<BlockPos> knownBlocks, Direction dir, BlockPos dirDistance) {
+    private ServerNodeStorage(UUID uuid, BlockPos centerBlock, HashSet<BlockPos> knownBlocks, Direction dir, BlockPos dirDistance, NodeEnv env) {
         this.uuid = uuid;
         this.centerBlock = centerBlock;
         knownBlocks.add(centerBlock);
         this.knownBlocks = knownBlocks;
         this.dir = dir;
         this.dirDistance = dirDistance;
-        this.env = new NodeEnv();
+        this.env = env;
     }
 
     public NodeEnv getEnv() {
@@ -66,7 +66,9 @@ public class ServerNodeStorage {
         var blockPosDir = ((IntArrayTag) tag.get("dirDistance")).getAsIntArray();
         var dirDistance = new BlockPos(blockPosDir[0], blockPosDir[1], blockPosDir[2]);
 
-        return new ServerNodeStorage(uuid, centerBlock, knownBlocks, dir, dirDistance);
+        var env = new NodeEnv(tag.getCompound("env"));
+
+        return new ServerNodeStorage(uuid, centerBlock, knownBlocks, dir, dirDistance, env);
     }
 
     public CompoundTag save(CompoundTag tag){
@@ -78,6 +80,7 @@ public class ServerNodeStorage {
         tag.putInt("dir",dir.ordinal());
         tag.put("centerBlock",NbtUtils.writeBlockPos(this.centerBlock));
         tag.put("dirDistance", NbtUtils.writeBlockPos(this.dirDistance));
+        tag.put("env",env.save());
 
         return tag;
     }

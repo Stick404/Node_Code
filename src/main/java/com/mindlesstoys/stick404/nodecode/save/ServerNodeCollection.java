@@ -132,7 +132,6 @@ public class ServerNodeCollection extends SavedData {
         return false;
     }
 
-
     public static ServerNodeCollection load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         ServerNodeCollection data = ServerNodeCollection.create();
 

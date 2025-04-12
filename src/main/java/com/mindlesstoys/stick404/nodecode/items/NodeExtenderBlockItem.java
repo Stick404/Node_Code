@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.mindlesstoys.stick404.nodecode.registries.BlockRegistry;
 import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 
-import static com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection.factory;
-
 public class NodeExtenderBlockItem extends BlockItem {
     public NodeExtenderBlockItem(Properties properties) {
         super(BlockRegistry.NODE_EXTENDER.get(), properties);

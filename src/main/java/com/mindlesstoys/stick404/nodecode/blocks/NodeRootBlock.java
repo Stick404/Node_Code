@@ -81,6 +81,8 @@ public class NodeRootBlock extends BaseEntityBlock {
                 env.connect(new Request(add, 0, print, 0));
 
                 env.setRoot(print);
+                env.read();
+                storage.setDirty();
             } else {
                 System.out.println("Running Nodes!");
                 env.run();

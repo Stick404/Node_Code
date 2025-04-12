@@ -37,7 +37,7 @@ public abstract class DataType<T> {
         return type;
     }
 
-    /** Used for serializing the data into Minecraft Tags so they can be saved for later. These will mostly be called in {@link NodeEnv#save(CompoundTag)}}
+    /** Used for serializing the data into Minecraft Tags so they can be saved for later. These will mostly be called in {@link NodeEnv#save()}}
      * @return A tag with the data saved into it
      */
     public CompoundTag save(){

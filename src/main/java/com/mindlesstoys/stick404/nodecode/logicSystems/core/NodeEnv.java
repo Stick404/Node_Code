@@ -1,6 +1,8 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.core;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,12 +17,34 @@ public class NodeEnv {
     private static final Logger log = LogManager.getLogger(NodeEnv.class);
     public Node root; // Root is the last node in the graph
     public HashMap<UUID, Node> nodes; // All known nodes
-    public Stack<Node> toRun; // The order to run all nodes
+    public Stack<Node> toRun; // The order to run all nodes TODO: maybe make this a Stack of UUIDS? And contact NodeEnv#nodes to get the Nodes
     public HashMap<UUID, DataType<?>[]> outputs; // Holds all the outputs of nodes
 
     public NodeEnv(){
         outputs = new HashMap<>();
         nodes = new HashMap<>();
+        toRun = new Stack<>();
+    }
+
+    public NodeEnv(CompoundTag tag){
+        this.outputs = new HashMap<>();
+        this.nodes = new HashMap<>();
+        this.toRun = new Stack<>();
+
+        ListTag nodes = tag.getList("nodes",Tag.TAG_COMPOUND);
+        for (var temp : nodes){
+            CompoundTag nodeT = (CompoundTag) temp;
+            Node node = new Node(nodeT);
+            this.nodes.put(node.uuid,node);
+        }
+
+        ListTag toRun = tag.getList("toRun", Tag.TAG_COMPOUND);
+        for (var temp : toRun){
+            CompoundTag nodeT = (CompoundTag) temp;
+            this.toRun.push(new Node(nodeT));
+        }
+
+        if (tag.contains("root")) this.root = this.nodes.get(tag.getUUID("root"));
     }
 
     /** Takes the root node (final node normally), and goes up and down the graph of nodes. This also sets the {@link NodeEnv#toRun} to the stack.
@@ -191,8 +215,25 @@ public class NodeEnv {
         parent.inputs[request.targetSlot()] = null;
     }
 
-    public CompoundTag save(CompoundTag tag){
+    public CompoundTag save(){
+        CompoundTag tag = new CompoundTag();
 
+        if (isRoot()){
+            tag.putUUID("root",root.uuid);
+        }
+
+        ListTag nodesTag = new ListTag();
+        for (var temp : nodes.entrySet()){
+            var node = temp.getValue();
+            nodesTag.add(node.save());
+        }
+        tag.put("nodes",nodesTag);
+
+        ListTag toRunTag = new ListTag();
+        for (var node : toRun) {
+            toRunTag.add(node.save());
+        }
+        tag.put("toRun",toRunTag);
         return tag;
     }
 
@@ -228,6 +269,59 @@ public class NodeEnv {
             this.inputs = new Request[nodeC.getInputTypes().length];
             this.outputs = new ArrayList<>();
             this.uuid = UUID.randomUUID();
+        }
+
+        protected Node(CompoundTag tag){
+            this.function = ResourceLocation.parse(tag.getString("function"));
+            Func nodeC = KNOWN_NODES.get(function);
+            this.uuid = tag.getUUID("uuid");
+            this.inputTypes = nodeC.getInputTypes();
+            this.outputTypes = nodeC.getOutputTypes();
+
+            ListTag inputs = tag.getList("inputs", Tag.TAG_COMPOUND);
+            this.inputs = new Request[nodeC.getInputTypes().length];
+            for (var temp : inputs){
+                CompoundTag in = (CompoundTag) temp;
+                this.inputs[in.getInt("slot")] = Request.load(in.getCompound("request"));
+            }
+
+            ListTag outputs = tag.getList("outputs", Tag.TAG_COMPOUND);
+            this.outputs = new ArrayList<>();
+            for (var temp : outputs){
+                CompoundTag in = (CompoundTag) temp;
+                this.outputs.add(Request.load(in));
+            }
+
+            if (tag.contains("extra")) this.extra = DataType.load(tag.getCompound("extra"));
+        }
+
+        protected CompoundTag save(){
+            CompoundTag tag = new CompoundTag();
+            tag.putString("function",function.toString());
+
+            int i;
+            ListTag inputTags = new ListTag();
+            for (i = 0; i < inputs.length; i++){
+                if (inputs[i] != null) {
+                    CompoundTag in = new CompoundTag();
+                    in.putInt("slot", i);
+                    in.put("request", inputs[i].save());
+                    inputTags.add(in);
+                }
+            }
+            tag.put("inputs",inputTags);
+
+            ListTag outputTag = new ListTag();
+            for (var output : outputs){
+                outputTag.add(output.save());
+            }
+            tag.put("outputs",outputTag);
+
+            tag.putUUID("uuid",uuid);
+
+            if (this.extra != null) tag.put("extra", this.extra.save());
+
+            return tag;
         }
     }
 }

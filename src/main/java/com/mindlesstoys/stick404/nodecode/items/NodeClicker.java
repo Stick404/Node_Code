@@ -16,12 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import com.mindlesstoys.stick404.nodecode.save.ClientNodeCollection;
-import com.mindlesstoys.stick404.nodecode.save.ClientNodeStorage;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection.factory;
 
 public class NodeClicker extends Item {
     public static int MAX_DIST = 5;
