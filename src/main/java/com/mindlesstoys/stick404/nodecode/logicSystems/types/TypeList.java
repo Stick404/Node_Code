@@ -30,7 +30,6 @@ public class TypeList extends DataType<ArrayList<DataType<?>>> {
         return (ArrayList<DataType<?>>) super.getData().clone();
     }
 
-    // DO NOT TRY TO SAVE TypeList, IT WILL BE LOADED WITH NOTHING
     public static DataType<ArrayList<DataType<?>>> load(CompoundTag tag) {
         var list = tag.getList(dataSave, Tag.TAG_COMPOUND);
         ArrayList<DataType<?>> dataList = new ArrayList<>();

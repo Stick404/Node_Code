@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.core;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.types.TypeList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
@@ -43,9 +44,9 @@ public abstract class DataType<T> {
         return new CompoundTag();
     }
 
-    /**
+    /** This method is primarily meant for {@link TypeList#load(CompoundTag)}, but it can be used to load any DataType from a tag; if it is registered
      * @param tag The tag to attempt to load from
-     * @return
+     * @return The datatype the CompoundTag encodes
      */
     public static DataType<?> load(CompoundTag tag) {
         String type = tag.getString(dataType);
