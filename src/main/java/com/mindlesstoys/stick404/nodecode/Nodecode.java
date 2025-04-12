@@ -26,12 +26,11 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 import com.mindlesstoys.stick404.nodecode.registries.*;
-import com.mindlesstoys.stick404.nodecode.registries.process.NodeProcess;
+import com.mindlesstoys.stick404.nodecode.registries.process.RegistryProcess;
 import com.mindlesstoys.stick404.nodecode.rendering.PlaneLevelRendering;
 import com.mindlesstoys.stick404.nodecode.save.ClientNodeCollection;
 
 import static com.mindlesstoys.stick404.nodecode.registries.BlockRegistry.NODE_ROOT_BLOCK_ITEM;
-import static com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection.factory;
 
 @Mod(Nodecode.MODID)
 public class Nodecode {
@@ -61,7 +60,8 @@ public class Nodecode {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        NodeProcess.NodeInit("common");
+        RegistryProcess.NodeInit("common");
+        RegistryProcess.TypeInit("common");
 
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");

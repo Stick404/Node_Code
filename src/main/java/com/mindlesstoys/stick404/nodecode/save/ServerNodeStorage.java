@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.save;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.core.NodeEnv;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -19,7 +20,7 @@ public class ServerNodeStorage {
     private final UUID uuid;
     private final BlockPos centerBlock;
     private BlockPos dirDistance; //these 3 are used for rendering and quickly finding the bounding box. Is in World Space
-    //Eval eval;
+    private final NodeEnv env;
     //Add more vals if needed
 
     public ServerNodeStorage(UUID uuid, BlockPos centerBlock, Direction dir){
@@ -30,6 +31,7 @@ public class ServerNodeStorage {
         this.knownBlocks = tempSet;
         this.dir = dir;
         this.dirDistance = new BlockPos(0,0,0);
+        this.env = new NodeEnv();
     }
 
     //made for ServerNodeStorage#fromTag
@@ -41,6 +43,11 @@ public class ServerNodeStorage {
         this.knownBlocks = knownBlocks;
         this.dir = dir;
         this.dirDistance = dirDistance;
+        this.env = new NodeEnv();
+    }
+
+    public NodeEnv getEnv() {
+        return env;
     }
 
     public static ServerNodeStorage fromTag(CompoundTag tag, UUID uuid){
@@ -74,6 +81,7 @@ public class ServerNodeStorage {
 
         return tag;
     }
+
     public CompoundTag save(){
         return save(new CompoundTag());
     }

@@ -15,34 +15,19 @@ public class NodeRootEntity extends BlockEntity {
         this.uuid = UUID.randomUUID();
     }
 
-    private final UUID uuid;
+    private UUID uuid;
 
-    private Integer xCount = 0;
-    private Integer yCount = 0;
-    private Integer zCount = 0;
-
-    public Integer getxCount() {return xCount;}
-    public Integer getyCount() {return yCount;}
-    public Integer getzCount() {return zCount;}
     public UUID getUuid() {return uuid;}
-
-    public void setxCount(Integer count) {this.xCount = count;}
-    public void setyCount(Integer count) {this.yCount = count;}
-    public void setzCount(Integer count) {this.zCount = count;}
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        this.xCount = tag.getInt("xcount");
-        this.yCount = tag.getInt("ycount");
-        this.zCount = tag.getInt("zcount");
+        this.uuid = tag.getUUID("uuid");
         super.loadAdditional(tag, registries);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putInt("xcount",this.xCount);
-        tag.putInt("ycount",this.yCount);
-        tag.putInt("zcount",this.zCount);
+        tag.putUUID("uuid",this.uuid);
         super.saveAdditional(tag, registries);
     }
 }

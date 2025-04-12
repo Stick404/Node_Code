@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.core;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,7 +9,7 @@ import com.mindlesstoys.stick404.nodecode.logicSystems.types.TypeObject;
 
 import java.util.*;
 
-import static com.mindlesstoys.stick404.nodecode.registries.process.NodeProcess.KNOWN_NODES;
+import static com.mindlesstoys.stick404.nodecode.registries.process.RegistryProcess.KNOWN_NODES;
 
 public class NodeEnv {
     private static final Logger log = LogManager.getLogger(NodeEnv.class);
@@ -65,6 +66,14 @@ public class NodeEnv {
 
     public void setRoot(UUID node){
         this.root = nodes.get(node);
+    }
+
+    public UUID getRoot(){
+        return this.root.uuid;
+    }
+
+    public boolean isRoot(){
+        return this.root != null;
     }
 
     /**
@@ -180,6 +189,11 @@ public class NodeEnv {
 
         child.outputs.remove(request);
         parent.inputs[request.targetSlot()] = null;
+    }
+
+    public CompoundTag save(CompoundTag tag){
+
+        return tag;
     }
 
     /**
