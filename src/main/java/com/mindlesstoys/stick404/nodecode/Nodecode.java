@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode;
 
+import com.mindlesstoys.stick404.nodecode.rendering.NodeLevelRendering;
 import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -103,6 +104,7 @@ public class Nodecode {
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
             NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, PlaneLevelRendering::render);
+            NeoForge.EVENT_BUS.addListener(RenderLevelStageEvent.class, NodeLevelRendering::render);
 
             NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,LevelEvent.Load.class, (x) ->{
                 ClientNodeCollection.get().clearTodo();

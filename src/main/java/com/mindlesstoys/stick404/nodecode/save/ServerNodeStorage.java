@@ -4,6 +4,7 @@ import com.mindlesstoys.stick404.nodecode.logicSystems.core.NodeEnv;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
+import net.minecraft.util.StringDecomposer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import com.mindlesstoys.stick404.nodecode.Utils;
@@ -66,7 +67,7 @@ public class ServerNodeStorage {
         var blockPosDir = ((IntArrayTag) tag.get("dirDistance")).getAsIntArray();
         var dirDistance = new BlockPos(blockPosDir[0], blockPosDir[1], blockPosDir[2]);
 
-        var env = new NodeEnv(tag.getCompound("env"));
+        var env = new NodeEnv(tag.getCompound("env"),uuid);
 
         return new ServerNodeStorage(uuid, centerBlock, knownBlocks, dir, dirDistance, env);
     }
@@ -187,7 +188,14 @@ public class ServerNodeStorage {
         System.out.println(dirDistance);
     }
     public void updateClients(boolean shouldClear){
-        PacketDistributor.sendToAllPlayers(new NodeStorageS2C(this.centerBlock,this.dirDistance,this.uuid,shouldClear));
+        ListTag list = new ListTag();
+        for (var temp : this.env.nodes.entrySet()){
+            NodeEnv.Node node = temp.getValue();
+            list.add(node.save());
+        }
+        CompoundTag tag = new CompoundTag();
+        tag.put("nodes",list);
+        PacketDistributor.sendToAllPlayers(new NodeStorageS2C(this.centerBlock,this.dirDistance,this.uuid,shouldClear, tag.toString()));
     }
     public void updateClients(){
         updateClients(true);

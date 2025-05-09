@@ -36,7 +36,7 @@ public class Utils {
      * @param cornerFar Another corner of the cube (or plane) you are trying to find
      * @param ray The length/direction of the ray you are using
      * @param pos The starting position of ray
-     * @return a {@link Vec2}. Where the X is how far the ray is from the cube (<=0 means it is on/in the cube). And the X is how far the cube is from the ray's start position
+     * @return a {@link Vec2}. Where the X is how far the ray is from the cube (<=0 means it is on/in the cube). And the Z is how far the cube is from the ray's start position
      */
     public static Vec2 raySlabIntersection(Vec3 cornerClose, Vec3 cornerFar, Vec3 ray, Vec3 pos){
         cornerClose = cornerClose.add(0.01);

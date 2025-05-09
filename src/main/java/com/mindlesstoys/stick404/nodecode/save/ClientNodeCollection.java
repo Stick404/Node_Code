@@ -50,7 +50,7 @@ public class ClientNodeCollection {
     }
 
     public void addStorage(UUID uuid, BlockPos centerBlock, BlockPos dir){
-        this.nodeLocations.put(uuid,new ClientNodeStorage(uuid,centerBlock,dir));
+        this.nodeLocations.put(uuid,new ClientNodeStorage(uuid,centerBlock,dir,null));
     }
 
     public void updateStorage(UUID uuid, ClientNodeStorage storage){

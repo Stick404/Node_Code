@@ -21,7 +21,7 @@ public final class PlaneLevelRendering {
             for (var nodeSystemTEMP : collection.getNodeLocations().entrySet()) {
                 var nodeSystem = nodeSystemTEMP.getValue();
                 if (!nodeSystem.isShouldRender()){
-                    return;
+                    continue;
                 }
                 var stack = event.getPoseStack();
                 stack.pushPose();

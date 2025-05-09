@@ -1,7 +1,11 @@
 package com.mindlesstoys.stick404.nodecode.save;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.core.NodeEnv;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.*;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ClientNodeStorage {
@@ -9,6 +13,7 @@ public class ClientNodeStorage {
     public final BlockPos centerBlock;
     private BlockPos dirDistance;
     private boolean shouldRender = true;
+    private HashMap<UUID, NodeEnv.Node> nodes;
 
     /**
      * This handles all the client side Rendering/Data Tracking of {@link ServerNodeStorage}.
@@ -17,10 +22,23 @@ public class ClientNodeStorage {
      * @param centerBlock The center block of this storage
      * @param dirDistance How far the NodeArray will extend
      */
-    public ClientNodeStorage(UUID uuid, BlockPos centerBlock, BlockPos dirDistance) {
+    public ClientNodeStorage(UUID uuid, BlockPos centerBlock, BlockPos dirDistance, String nodes) {
         this.uuid = uuid;
         this.centerBlock = centerBlock;
         this.dirDistance = dirDistance;
+        CompoundTag tag = null;
+        try {
+            tag = TagParser.parseTag(nodes);
+        } catch (CommandSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        this.nodes = new HashMap<>();
+        for (var tempNode : tag.getList("nodes",CompoundTag.TAG_COMPOUND)){
+            CompoundTag nodeTag = (CompoundTag) tempNode;
+            NodeEnv.Node node = new NodeEnv.Node(nodeTag);
+
+            this.nodes.put(node.uuid,node);
+        }
     }
 
     /** When this {@link ClientNodeStorage}
@@ -36,5 +54,16 @@ public class ClientNodeStorage {
 
     public BlockPos getDirDistance() {
         return dirDistance;
+    }
+
+    public void setNodes(HashMap<UUID, NodeEnv.Node> nodes) {
+        this.nodes = nodes;
+    }
+    public NodeEnv.Node getNode(UUID uuid) {
+        return this.nodes.get(uuid);
+    }
+
+    public HashMap<UUID, NodeEnv.Node> getNodes() {
+        return nodes;
     }
 }

@@ -24,10 +24,10 @@ public class NodeRegistry {
     public static final DeferredHolder<Func, FuncInput<ArrayList<DataType<?>>>> NODE_LIST_INPUT = NODES.register("list_input", () -> new FuncInput<>(new TypeList()));
 
     //Consumers
-    public static final DeferredHolder<Func, FuncPrint> NODE_PRINT = NODES.register("node_print", FuncPrint::new);
+    public static final DeferredHolder<Func, FuncPrint> NODE_PRINT = NODES.register("print", FuncPrint::new);
 
     //Numbers
-    public static final DeferredHolder<Func, FuncAdd> NODE_ADD = NODES.register("node_add", FuncAdd::new);
+    public static final DeferredHolder<Func, FuncAdd> NODE_ADD = NODES.register("add", FuncAdd::new);
 
     //Lists
     public static final DeferredHolder<Func, FuncAppendList> NODE_LIST_APPEND = NODES.register("list_append", FuncAppendList::new);

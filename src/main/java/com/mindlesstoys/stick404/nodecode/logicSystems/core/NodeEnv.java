@@ -1,9 +1,12 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.core;
 
+import com.mindlesstoys.stick404.nodecode.save.ServerNodeStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.mindlesstoys.stick404.nodecode.logicSystems.types.TypeNull;
@@ -19,20 +22,29 @@ public class NodeEnv {
     public HashMap<UUID, Node> nodes; // All known nodes
     public Stack<Node> toRun; // The order to run all nodes TODO: maybe make this a Stack of UUIDS? And contact NodeEnv#nodes to get the Nodes
     public HashMap<UUID, DataType<?>[]> outputs; // Holds all the outputs of nodes
+    private final UUID parentStorage;
 
     public NodeEnv(){
         outputs = new HashMap<>();
         nodes = new HashMap<>();
         toRun = new Stack<>();
+        parentStorage = null; //because there is no parent storage when a NodeEnv is made this way
+    }
+    public NodeEnv(ServerNodeStorage storage){
+        outputs = new HashMap<>();
+        nodes = new HashMap<>();
+        toRun = new Stack<>();
+        parentStorage = storage.getUuid();
     }
 
     /** Creates a new NodeEnv via a {@link CompoundTag}
      * @param tag A {@link CompoundTag} to read into a new NodeEnv
      */
-    public NodeEnv(CompoundTag tag){
+    public NodeEnv(CompoundTag tag, UUID parentStorage){
         this.outputs = new HashMap<>();
         this.nodes = new HashMap<>();
         this.toRun = new Stack<>();
+        this.parentStorage = parentStorage;
 
         ListTag nodes = tag.getList("nodes",Tag.TAG_COMPOUND);
         for (var temp : nodes){
@@ -244,7 +256,7 @@ public class NodeEnv {
     }
 
     /**
-     * A node just holds:
+     * A node "just" holds:
      * <ul>
      * <li>The {@link ResourceLocation} of the function to run</li>
      * <li>The Array of Input Types of the function</li>
@@ -253,16 +265,18 @@ public class NodeEnv {
      * <li>The array of {@link Request}s for inputs. The Length is equal to the defined {@link Func}'s inputTypes</li>
      * <li>The array of {@link Request}s for outputs. The Length is equal to the defined {@link Func}'s outputTypes</li>
      * <li>The UUID of the node</li>
+     * <li>The position of the node in 3d. Off centered on the NodeArray center block</li>
      *</ul>
      *
      */
     public static class Node {
-        final ResourceLocation function; //the function/node to run
+        final public ResourceLocation function; //the function/node to run
         Request[] inputs; //the input requests
         List<Request> outputs; //the output requests
         DataType<?> extra;
         public final DataType<?>[] inputTypes, outputTypes;
         public final UUID uuid; //the UUID of the link
+        public Vec3 position = new Vec3(0,0,0); //where the node its self is on the Node Plane
 
         /**
          * @param nodeRL The {@link ResourceLocation} (EG: "nodecode:node_add") of the node to run
@@ -280,7 +294,7 @@ public class NodeEnv {
         /** Creates a new Node via a {@link CompoundTag}
          * @param tag A {@link CompoundTag} to read into a new Node
          */
-        protected Node(CompoundTag tag){
+        public Node(CompoundTag tag){
             this.function = ResourceLocation.parse(tag.getString("function"));
             Func nodeC = KNOWN_NODES.get(function);
             this.uuid = tag.getUUID("uuid");
@@ -302,12 +316,14 @@ public class NodeEnv {
             }
 
             if (tag.contains("extra")) this.extra = DataType.load(tag.getCompound("extra"));
+
+            this.position = new Vec3(tag.getFloat("posX"),tag.getFloat("posY"),tag.getFloat("posZ"));
         }
 
         /** Converts the Node into a CompoundTag
          * @return A {@link CompoundTag} representing the Node
          */
-        protected CompoundTag save(){
+        public CompoundTag save(){
             CompoundTag tag = new CompoundTag();
             tag.putString("function",function.toString());
 
@@ -332,6 +348,10 @@ public class NodeEnv {
             tag.putUUID("uuid",uuid);
 
             if (this.extra != null) tag.put("extra", this.extra.save());
+
+            tag.putDouble("posX", this.position.x);
+            tag.putDouble("posY", this.position.y);
+            tag.putDouble("posZ", this.position.z);
 
             return tag;
         }

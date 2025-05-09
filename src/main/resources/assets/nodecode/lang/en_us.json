@@ -3,5 +3,10 @@
   "item.nodecode.node_root": "Root Node Block",
   "block.nodecode.node_extender": "Node Extender",
   "item.nodecode.node_extender": "Node Extender",
-  "item.nodecode.node_clicker": "Node Clicker"
+  "item.nodecode.node_clicker": "Node ClickerRrrr",
+
+  "nodes!": "",
+  "node.nodecode.double_input": "Double Input",
+  "node.nodecode.print": "Print",
+  "node.nodecode.add": "Add"
 }

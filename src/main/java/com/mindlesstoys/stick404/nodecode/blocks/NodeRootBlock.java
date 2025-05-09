@@ -31,7 +31,7 @@ import java.util.UUID;
 import static com.mindlesstoys.stick404.nodecode.Utils.ID;
 import static com.mindlesstoys.stick404.nodecode.registries.ItemRegistry.NODE_CLICKER;
 
-public class NodeRootBlock extends BaseEntityBlock {
+public class  NodeRootBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING;
 
     public NodeRootBlock(Properties p_49224_) {
@@ -73,8 +73,8 @@ public class NodeRootBlock extends BaseEntityBlock {
                 System.out.println("Setting Nodes!");
                 UUID input1 = env.createNode(ID("double_input"), new TypeDouble(5.0));
                 UUID input2 = env.createNode(ID("double_input"), new TypeDouble(10.0));
-                UUID add = env.createNode(ID("node_add"));
-                UUID print = env.createNode(ID("node_print"));
+                UUID add = env.createNode(ID("add"));
+                UUID print = env.createNode(ID("print"));
 
                 env.connect(new Request(input1, 0, add, 0));
                 env.connect(new Request(input2, 0, add, 1));
