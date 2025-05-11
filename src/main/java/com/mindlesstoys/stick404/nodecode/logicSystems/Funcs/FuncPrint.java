@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.Funcs;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.core.DefaultColors;
 import org.jetbrains.annotations.Nullable;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.DataType;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.Func;
@@ -16,6 +17,10 @@ public class FuncPrint implements Func {
 
     public DataType<?>[] getOutputTypes() {
         return outputTypes;
+    }
+
+    public int getColor() {
+        return DefaultColors.OUTPUT.color;
     }
 
     public DataType<?>[] run(DataType<?>[] inputs, @Nullable DataType<?> extra) {

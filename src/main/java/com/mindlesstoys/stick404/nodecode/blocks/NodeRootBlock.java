@@ -71,16 +71,18 @@ public class  NodeRootBlock extends BaseEntityBlock {
 
             if (!env.isRoot()) {
                 System.out.println("Setting Nodes!");
-                UUID input1 = env.createNode(ID("double_input"), new TypeDouble(5.0));
-                UUID input2 = env.createNode(ID("double_input"), new TypeDouble(10.0));
-                UUID add = env.createNode(ID("add"));
-                UUID print = env.createNode(ID("print"));
+                //UUID input1 = env.createNode(ID("double_input"), new TypeDouble(5.0));
+                //UUID input2 = env.createNode(ID("double_input"), new TypeDouble(10.0));
+                //UUID add = env.createNode(ID("add"));
+                //UUID print = env.createNode(ID("print"));
+                UUID test = env.createNode(ID("list_append"));
 
-                env.connect(new Request(input1, 0, add, 0));
-                env.connect(new Request(input2, 0, add, 1));
-                env.connect(new Request(add, 0, print, 0));
+                //env.connect(new Request(input1, 0, add, 0));
+                //env.connect(new Request(input2, 0, add, 1));
+                //env.connect(new Request(add, 0, print, 0));
 
-                env.setRoot(print);
+                //env.setRoot(print);
+                env.setRoot(test);
                 env.read();
                 storage.setDirty();
                 storage.updatePlayers();

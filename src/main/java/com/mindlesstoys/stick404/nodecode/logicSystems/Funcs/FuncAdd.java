@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.Funcs;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.core.DefaultColors;
 import org.jetbrains.annotations.Nullable;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.DataType;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.Func;
@@ -31,6 +32,13 @@ public class FuncAdd implements Func {
      */
     public DataType<?>[] getOutputTypes() {
         return outputTypes;
+    }
+
+    /**  Since addition is a math, it is recommended to use the Default, premade, colors
+     * @return the color the node should be
+     */
+    public int getColor() {
+        return DefaultColors.MATH.color;
     }
 
     /** This is a prime example of how {@link Func#run} works in an implemented node

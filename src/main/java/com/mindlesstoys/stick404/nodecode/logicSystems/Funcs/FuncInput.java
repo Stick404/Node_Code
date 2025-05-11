@@ -1,5 +1,6 @@
 package com.mindlesstoys.stick404.nodecode.logicSystems.Funcs;
 
+import com.mindlesstoys.stick404.nodecode.logicSystems.core.DefaultColors;
 import org.jetbrains.annotations.Nullable;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.DataType;
 import com.mindlesstoys.stick404.nodecode.logicSystems.core.Func;
@@ -11,6 +12,10 @@ public class FuncInput<T> implements Func {
     public FuncInput(DataType<T> type) { //The init value to use
         this.type = type;
         this.outputTypes = new DataType<?>[]{type};
+    }
+
+    public int getColor() {
+        return DefaultColors.INPUT.color;
     }
 
     public DataType<?>[] getInputTypes() {

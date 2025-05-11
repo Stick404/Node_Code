@@ -3,10 +3,21 @@
   "item.nodecode.node_root": "Root Node Block",
   "block.nodecode.node_extender": "Node Extender",
   "item.nodecode.node_extender": "Node Extender",
-  "item.nodecode.node_clicker": "Node ClickerRrrr",
+  "item.nodecode.node_clicker": "Node Clicker",
 
-  "nodes!": "",
+  "nodes": "",
   "node.nodecode.double_input": "Double Input",
   "node.nodecode.print": "Print",
-  "node.nodecode.add": "Add"
+  "node.nodecode.add": "Add",
+  "node.nodecode.list_append": "List Append",
+
+  "node descriptions": "",
+  "node.nodecode.double_input.output.0": "Double",
+  "node.nodecode.add.input.0": "Value 1",
+  "node.nodecode.add.input.1": "Value 2",
+  "node.nodecode.add.output.0": "Double",
+  "node.nodecode.list_append.output.0": "List",
+  "node.nodecode.list_append.input.0": "List",
+  "node.nodecode.list_append.input.1": "Value",
+  "node.nodecode.list_append.input.2": "Double|Null"
 }
