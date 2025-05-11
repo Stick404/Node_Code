@@ -48,11 +48,11 @@ public class NodeClicker extends Item {
 
                 Vec3 vec;
                 //TODO: Check if this might be behind a block
-                if ((outputX.y <= outputZ.y || outputX.x <= 0) && outputX.x <= 0 && outputX.y < MAX_DIST) {
+                if ((outputX.y <= outputZ.y || outputX.x <= 0) && outputX.x <= 0 && outputX.y < MAX_DIST && outputX.y > 0) {
                         System.out.println("Doing X!");
                         vec = lookAngle.multiply(outputX.y, outputX.y, outputX.y).add(eyePosition);
                         return editNodes(player, vec, storage, level);
-                } else if (outputZ.x <= 0 && outputZ.y < MAX_DIST){
+                } else if (outputZ.x <= 0 && outputZ.y < MAX_DIST && outputZ.y > 0){
                     System.out.println("Doing Z!");
                     vec = lookAngle.multiply(outputZ.y, outputZ.y, outputZ.y).add(eyePosition);
                     return editNodes(player, vec, storage, level);
