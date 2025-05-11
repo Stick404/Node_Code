@@ -19,6 +19,13 @@ public interface Func {
         return inputTypes;
     }
 
+    /** Its better to try to use a color from {@link DefaultColors}, but a custom color can be used too
+     * @return an int of the color this node should render as
+     */
+    default int getColor(){
+        return DefaultColors.DEFAULT.color;
+    }
+
     /**
      * @return The output types that this node will give
      */

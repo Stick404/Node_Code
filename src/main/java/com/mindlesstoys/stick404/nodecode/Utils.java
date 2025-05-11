@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector2d;
 
 import static com.mindlesstoys.stick404.nodecode.Nodecode.MODID;
 
@@ -36,11 +37,9 @@ public class Utils {
      * @param cornerFar Another corner of the cube (or plane) you are trying to find
      * @param ray The length/direction of the ray you are using
      * @param pos The starting position of ray
-     * @return a {@link Vec2}. Where the X is how far the ray is from the cube (<=0 means it is on/in the cube). And the Z is how far the cube is from the ray's start position
+     * @return a {@link Vector2d}. Where the X is how far the ray is from the cube (<=0 means it is on/in the cube). And the Z is how far the cube is from the ray's start position. Not using a {@link Vec2} since this can do doubles rather than floats.
      */
-    public static Vec2 raySlabIntersection(Vec3 cornerClose, Vec3 cornerFar, Vec3 ray, Vec3 pos){
-        cornerClose = cornerClose.add(0.01);
-        cornerFar = cornerFar.subtract(-0.01);
+    public static Vector2d raySlabIntersection(Vec3 cornerClose, Vec3 cornerFar, Vec3 ray, Vec3 pos){
         var XMin = (cornerClose.x -pos.x)/ray.x;
         var YMin = (cornerClose.y -pos.y)/ray.y;
         var ZMin = (cornerClose.z -pos.z)/ray.z;
@@ -60,6 +59,6 @@ public class Utils {
         var TEnter = Math.max(XEnter,Math.max(YEnter,ZEnter));
         var TExit = Math.min(XExit,Math.min(YExit,ZExit));
 
-        return new Vec2((float) (TEnter - TExit),(float) TEnter);
+        return new Vector2d(TEnter - TExit,TEnter);
     }
 }

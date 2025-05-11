@@ -19,6 +19,7 @@ public class NodeExtender extends Block {
         if(level instanceof ServerLevel serverLevel){
             var nodeCollection = ServerNodeCollection.getInstance(serverLevel);
             nodeCollection.tryAddExtension(pos);
+            nodeCollection.setDirty();
         }
     }
 

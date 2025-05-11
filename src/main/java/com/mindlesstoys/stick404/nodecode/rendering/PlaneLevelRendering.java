@@ -40,7 +40,7 @@ public final class PlaneLevelRendering {
 
                 RenderSystem.setShaderTexture(0, ID("textures/block/plane.png"));
                 RenderSystem.setShader(CoreShaders.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE);
-                RenderSystem.setShaderColor(1f, 1F, 1F, 1F);
+                //RenderSystem.setShaderColor(1f, 1F, 1F, 1F);
 
                 RenderSystem.enableBlend();
                 RenderSystem.disableDepthTest();
@@ -56,7 +56,7 @@ public final class PlaneLevelRendering {
                 stack.popPose();
             }
 
-            RenderSystem.setShaderColor(1F, 1F, 1F, 1F); //KEEP THIS LINE OR ELSE BLUE
+            //RenderSystem.setShaderColor(1F, 1F, 1F, 1F); //KEEP THIS LINE OR ELSE BLUE
         }
     }
 }

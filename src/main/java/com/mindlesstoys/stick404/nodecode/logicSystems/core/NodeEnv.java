@@ -276,7 +276,7 @@ public class NodeEnv {
         DataType<?> extra;
         public final DataType<?>[] inputTypes, outputTypes;
         public final UUID uuid; //the UUID of the link
-        public Vec3 position = new Vec3(0,0,0); //where the node its self is on the Node Plane
+        public Vec3 position = new Vec3(0,3,0); //where the node its self is on the Node Plane
 
         /**
          * @param nodeRL The {@link ResourceLocation} (EG: "nodecode:node_add") of the node to run

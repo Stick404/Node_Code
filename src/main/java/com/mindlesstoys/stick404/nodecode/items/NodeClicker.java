@@ -1,6 +1,8 @@
 package com.mindlesstoys.stick404.nodecode.items;
 
 import com.mindlesstoys.stick404.nodecode.Utils;
+import com.mindlesstoys.stick404.nodecode.save.ClientNodeCollection;
+import com.mindlesstoys.stick404.nodecode.save.ClientNodeStorage;
 import com.mindlesstoys.stick404.nodecode.save.ServerNodeCollection;
 import com.mindlesstoys.stick404.nodecode.save.ServerNodeStorage;
 import net.minecraft.client.gui.components.ChatComponent;
@@ -27,17 +29,17 @@ public class NodeClicker extends Item {
 
     @Override
     public InteractionResult use(Level lev, Player player, InteractionHand hand) {
-        if (lev instanceof ServerLevel level) {
+        if (lev instanceof ClientLevel level) {
 
-            ServerNodeCollection collection = ServerNodeCollection.getInstance(level);
+            ClientNodeCollection collection = ClientNodeCollection.get();
 
             var lookAngle = player.getLookAngle();
             var eyePosition = player.getEyePosition();
 
-            for (Map.Entry<UUID, ServerNodeStorage> storageTEMP : collection.getNodeLocations().entrySet()) {
-                ServerNodeStorage storage = storageTEMP.getValue();
+            for (Map.Entry<UUID, ClientNodeStorage> storageTEMP : collection.getNodeLocations().entrySet()) {
+                ClientNodeStorage storage = storageTEMP.getValue();
                 BlockPos dirDist = storage.getDirDistance();
-                BlockPos corner = storage.getCenterBlock();
+                BlockPos corner = storage.centerBlock;
                 Vec3 center = corner.getCenter();
 
                 var outputX = Utils.raySlabIntersection(center,corner.offset(new BlockPos(dirDist.getX(),dirDist.getY(),0)).getCenter(),
@@ -62,12 +64,14 @@ public class NodeClicker extends Item {
         }
         return InteractionResult.FAIL;
     }
-    private static InteractionResult editNodes(Player player, Vec3 vec, ServerNodeStorage storage, Level level){
+    private static InteractionResult editNodes(Player player, Vec3 temp, ClientNodeStorage storage, Level level){
         player.playSound(SoundEvent.createFixedRangeEvent(
                 ResourceLocation.fromNamespaceAndPath("minecraft","entity.experience_orb.pickup"),3f),0.2f,0.1f);
+        var vec = temp.subtract(storage.centerBlock.getCenter());
         System.out.println(vec);
         System.out.println("HIT!");
-        //player.displayClientMessage(Component.literal(String.valueOf(storage.centerBlock.getCenter().subtract(vec))),false);
+
+        player.displayClientMessage(Component.literal(String.valueOf(vec)),false);
         return InteractionResult.SUCCESS;
     }
 }
