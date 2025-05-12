@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -71,19 +72,22 @@ public class  NodeRootBlock extends BaseEntityBlock {
 
             if (!env.isRoot()) {
                 System.out.println("Setting Nodes!");
-                //UUID input1 = env.createNode(ID("double_input"), new TypeDouble(5.0));
-                //UUID input2 = env.createNode(ID("double_input"), new TypeDouble(10.0));
-                //UUID add = env.createNode(ID("add"));
-                //UUID print = env.createNode(ID("print"));
-                UUID test = env.createNode(ID("list_append"));
+                UUID input1 = env.createNode(ID("double_input"), new TypeDouble(5.0));
+                UUID input2 = env.createNode(ID("double_input"), new TypeDouble(10.0));
+                UUID add = env.createNode(ID("add"));
+                UUID print = env.createNode(ID("print"));
 
-                //env.connect(new Request(input1, 0, add, 0));
-                //env.connect(new Request(input2, 0, add, 1));
-                //env.connect(new Request(add, 0, print, 0));
+                env.connect(new Request(input1, 0, add, 0));
+                env.connect(new Request(input2, 0, add, 1));
+                env.connect(new Request(add, 0, print, 0));
 
-                //env.setRoot(print);
-                env.setRoot(test);
+                env.setRoot(print);
                 env.read();
+
+                env.retrieveNode(input1).position = new Vec3(-7.33,3.40,0.0);
+                env.retrieveNode(input2).position = new Vec3(-7.38,2.07,0.0);
+                env.retrieveNode(add).position = new Vec3(-5.21,2.57,0.0);
+                env.retrieveNode(print).position = new Vec3(-2.67,2.51,0.0);
                 storage.setDirty();
                 storage.updatePlayers();
             } else {

@@ -174,6 +174,13 @@ public class NodeEnv {
         return link.uuid;
     }
 
+    public UUID createNode(ResourceLocation nodeRl, Vec3 pos){
+        Node link = new Node(nodeRl);
+        link.position = pos;
+        this.nodes.put(link.uuid,link);
+        return link.uuid;
+    }
+
     /**
      * @param nodeRL The {@link ResourceLocation} (EG: "nodecode:node_add") of the node to run
      * @param extra The Extra data a Node might need to be run (EG: Input nodes and default values)
@@ -228,6 +235,14 @@ public class NodeEnv {
 
         child.outputs.remove(request);
         parent.inputs[request.targetSlot()] = null;
+    }
+
+    /** Not recommended to use, instead use other methods that cleanly interact with the NodeEnv System
+     * @param uuid The {@link UUID} of a Node
+     * @return a {@link Node}
+     */
+    public Node retrieveNode(UUID uuid){
+        return this.nodes.get(uuid);
     }
 
     /** Converts the NodeEnv into a CompoundTag
