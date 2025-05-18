@@ -285,6 +285,7 @@ public class NodeEnv {
      *
      */
     public static class Node {
+        public Moveable moveability = Moveable.MOVEABLE;
         final public ResourceLocation function; //the function/node to run
         Request[] inputs; //the input requests
         List<Request> outputs; //the output requests
@@ -330,6 +331,8 @@ public class NodeEnv {
                 this.outputs.add(Request.load(in));
             }
 
+            this.moveability = Moveable.valueOf(tag.getString("moveability"));
+
             if (tag.contains("extra")) this.extra = DataType.load(tag.getCompound("extra"));
 
             this.position = new Vec3(tag.getFloat("posX"),tag.getFloat("posY"),tag.getFloat("posZ"));
@@ -361,6 +364,8 @@ public class NodeEnv {
             tag.put("outputs",outputTag);
 
             tag.putUUID("uuid",uuid);
+
+            tag.putString("moveability",this.moveability.toString());
 
             if (this.extra != null) tag.put("extra", this.extra.save());
 

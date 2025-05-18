@@ -9,7 +9,6 @@ public enum DefaultColors {
     OUTPUT(0xFF009197);
 
     public final int color;
-
     DefaultColors(int color){
         this.color = color;
     }
